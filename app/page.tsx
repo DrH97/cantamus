@@ -1,65 +1,242 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { motion } from "framer-motion";
+import { Calendar, Heart, Music, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { HeroAfrican } from "@/components/home/hero-african";
+import { HeroTraditional } from "@/components/home/hero-traditional";
+import { ThemeSwitcher } from "@/components/home/theme-switcher";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardIcon } from "@/components/ui/card";
+import {
+  Section,
+  SectionDivider,
+  SectionHeader,
+} from "@/components/ui/section";
+import { siteConfig } from "@/data/site-config";
+import type { Theme } from "@/types";
+
+const heroComponents: Record<Theme, React.ComponentType> = {
+  african: HeroAfrican,
+  traditional: HeroTraditional,
+};
+
+export default function HomePage() {
+  const [theme, setTheme] = useState<Theme>("african");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "african") {
+      root.removeAttribute("data-theme");
+    } else {
+      root.setAttribute("data-theme", theme);
+    }
+  }, [theme]);
+
+  const HeroComponent = heroComponents[theme];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <ThemeSwitcher currentTheme={theme} onThemeChange={setTheme} />
+      </div>
+
+      <HeroComponent />
+
+      <SectionDivider />
+
+      <Section variant="alternate" size="lg">
+        <SectionHeader title="Our Mission" subtitle={siteConfig.mission} />
+        <div className="grid gap-8 md:grid-cols-3">
+          {[
+            {
+              icon: Music,
+              title: "Sacred Music",
+              description:
+                "Bringing together Gregorian chant, Classical masterpieces, and vibrant African traditions to elevate the liturgy.",
+            },
+            {
+              icon: Heart,
+              title: "True Beauty",
+              description:
+                "Directing hearts to experience and encounter True Beauty through the art of sacred music.",
+            },
+            {
+              icon: Users,
+              title: "Community",
+              description:
+                "A family of voices united in faith, serving the Young Professionals' Mass at St Austin's Church, Nairobi.",
+            },
+          ].map((item, index) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.15,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="group"
+            >
+              <Card className="h-full text-center" padding="lg">
+                <CardIcon>
+                  <item.icon />
+                </CardIcon>
+                <h3 className="mb-3 text-xl font-semibold text-text">
+                  {item.title}
+                </h3>
+                <CardContent>{item.description}</CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      <Section variant="dark" size="lg">
+        <SectionHeader
+          title="Our Musical Traditions"
+          subtitle="A confluence of sacred musical heritage"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+        <div className="grid gap-8 md:grid-cols-3">
+          {[
+            {
+              tradition: "Gregorian",
+              description:
+                "The ancient chant tradition of the Church, with its meditative melodies and sacred Latin texts that have echoed through cathedrals for over a millennium.",
+              gradient: "from-primary to-secondary",
+              image:
+                "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=600&q=80",
+            },
+            {
+              tradition: "Classical",
+              description:
+                "Timeless works from Mozart, Palestrina, Vivaldi, and other masters of sacred polyphony that lift the soul to contemplate the divine.",
+              gradient: "from-secondary to-primary-dark",
+              image:
+                "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=600&q=80",
+            },
+            {
+              tradition: "African",
+              description:
+                "Vibrant rhythms and Swahili texts that celebrate our Kenyan heritage and African spirituality, bringing life and joy to worship.",
+              gradient: "from-royal-purple to-deep-purple",
+              image:
+                "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80",
+            },
+          ].map((item, index) => (
+            <motion.div
+              key={item.tradition}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.15,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="group relative overflow-hidden bg-surface border border-border transition-all duration-400 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              {/* Image */}
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src={item.image}
+                  alt={item.tradition}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/50 to-transparent" />
+                <div
+                  className={`absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r ${item.gradient}`}
+                />
+              </div>
+
+              {/* Content */}
+              <div className="p-6 relative">
+                <div
+                  className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${item.gradient} transition-all duration-400 group-hover:w-1.5`}
+                />
+                <h3 className="text-2xl font-semibold text-text mb-3 relative z-10">
+                  {item.tradition}
+                </h3>
+                <p className="text-text-muted leading-relaxed relative z-10">
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      <Section variant="accent" size="lg">
+        <div className="flex flex-col items-center text-center relative">
+          {/* Decorative pattern background */}
+          <div className="absolute inset-0 opacity-5">
+            <svg
+              className="w-full h-full"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+              <pattern
+                id="diamond-pattern"
+                x="0"
+                y="0"
+                width="20"
+                height="20"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M10 0L20 10L10 20L0 10Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  className="text-primary"
+                />
+              </pattern>
+              <rect width="100%" height="100%" fill="url(#diamond-pattern)" />
+            </svg>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <Calendar className="h-16 w-16 text-primary mb-6 mx-auto drop-shadow-[0_0_20px_var(--gold-glow)]" />
+            <h2 className="text-4xl font-bold md:text-5xl mb-6">
+              Join Us at Mass
+            </h2>
+            <p className="text-xl text-text-muted max-w-2xl mb-2">
+              {siteConfig.location.venue}
+            </p>
+            <p className="text-primary font-medium tracking-wide mb-10">
+              {siteConfig.location.description}
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link href="/contact">
+                <Button size="lg" className="uppercase tracking-wider">
+                  Get in Touch
+                </Button>
+              </Link>
+              <Link href="/about">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="uppercase tracking-wider"
+                >
+                  Learn More
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
-      </main>
-    </div>
+      </Section>
+    </>
   );
 }

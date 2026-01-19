@@ -1,26 +1,284 @@
 @import "tailwindcss";
 
+/* ========================================
+   CANTAMUS THEME SYSTEM
+   Classical African - Bold, Regal, Modern
+   ======================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Default: Classical African Theme */
+  --primary: #d4a853;
+  --primary-dark: #b8923a;
+  --primary-light: #e8c780;
+  --secondary: #cd7f32;
+  --secondary-dark: #b87333;
+  --accent: #4a1942;
+  --accent-dark: #2d1f3d;
+  --background: #1a1a1f;
+  --background-alt: #252529;
+  --surface: #2f2f35;
+  --surface-elevated: #3a3a42;
+  --text: #f5f0e8;
+  --text-muted: #c9c2b5;
+  --border: #3d3d45;
+
+  /* Extended palette */
+  --gold: #d4a853;
+  --gold-glow: rgba(212, 168, 83, 0.3);
+  --royal-purple: #4a1942;
+  --deep-purple: #2d1f3d;
+  --obsidian: #0d0d0f;
+
+  /* Spacing */
+  --header-height: 4.5rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 500ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Traditional Catholic Theme */
+[data-theme="traditional"] {
+  --primary: #c9a227;
+  --primary-dark: #a8871f;
+  --primary-light: #dbb84a;
+  --secondary: #722f37;
+  --secondary-dark: #5a252c;
+  --accent: #1e3a5f;
+  --accent-dark: #152b47;
+  --background: #1c1915;
+  --background-alt: #252220;
+  --surface: #2e2a26;
+  --surface-elevated: #3a3530;
+  --text: #f5f0e8;
+  --text-muted: #b8b0a5;
+  --border: #3d3830;
+  --gold: #c9a227;
+  --gold-glow: rgba(201, 162, 39, 0.3);
+  --royal-purple: #722f37;
+  --deep-purple: #1e3a5f;
+  --obsidian: #0f0d0b;
+}
+
+/* ========================================
+   TAILWIND THEME CONFIGURATION
+   ======================================== */
 
 @theme inline {
+  /* Colors */
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background-alt: var(--background-alt);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-foreground: var(--text);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-gold: var(--gold);
+  --color-gold-glow: var(--gold-glow);
+  --color-royal-purple: var(--royal-purple);
+  --color-deep-purple: var(--deep-purple);
+  --color-obsidian: var(--obsidian);
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-display: var(--font-playfair, Georgia, serif);
+
+  /* Header height */
+  --spacing-header: var(--header-height);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  line-height: 1.6;
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* ========================================
+   FOCUS STYLES
+   ======================================== */
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   SELECTION
+   ======================================== */
+
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* Pattern backgrounds - Classical African Geometric */
+.pattern-african {
+  background-color: var(--obsidian);
+  background-image:
+    linear-gradient(135deg, var(--royal-purple) 0%, transparent 50%),
+    linear-gradient(225deg, var(--deep-purple) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d4a853' stroke-width='0.5' opacity='0.12'%3E%3Cpath d='M0 0l40 40M40 0l40 40M0 40l40 40M40 40l40 40'/%3E%3Cpath d='M20 0v80M60 0v80M0 20h80M0 60h80'/%3E%3Crect x='15' y='15' width='10' height='10'/%3E%3Crect x='55' y='15' width='10' height='10'/%3E%3Crect x='15' y='55' width='10' height='10'/%3E%3Crect x='55' y='55' width='10' height='10'/%3E%3Cpolygon points='40,5 45,15 35,15'/%3E%3Cpolygon points='40,75 45,65 35,65'/%3E%3Cpolygon points='5,40 15,45 15,35'/%3E%3Cpolygon points='75,40 65,45 65,35'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.pattern-traditional {
+  background-color: var(--obsidian);
+  background-image:
+    linear-gradient(180deg, var(--royal-purple) 0%, transparent 30%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9a227' stroke-width='0.5' opacity='0.1'%3E%3Cpath d='M30 0v60M0 30h60'/%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3Cpath d='M15 15l30 30M45 15l-30 30'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Glow effects */
+.glow-gold {
+  box-shadow: 0 0 40px var(--gold-glow);
+}
+
+.glow-gold-sm {
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+
+/* Gold gradient text */
+.text-gradient-gold {
+  background: linear-gradient(
+    135deg,
+    var(--text) 0%,
+    var(--primary-light) 50%,
+    var(--primary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gold shimmer animation */
+@keyframes shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.shimmer-gold {
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--secondary),
+    var(--primary)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Geometric rotation animation */
+@keyframes rotate-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 60s linear infinite;
+}
+
+/* Pulse glow animation */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
 }
