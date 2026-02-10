@@ -16,7 +16,7 @@ export function Header() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 h-header bg-obsidian/90 backdrop-blur-xl border-b border-border">
         {/* Gold accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
 
         <div className="container flex h-full items-center justify-between">
           <Link
@@ -30,7 +30,10 @@ export function Header() {
           <nav className="hidden md:block">
             <ul className="flex items-center gap-1">
               {navItems.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.href);
                 return (
                   <li key={item.href}>
                     <Link

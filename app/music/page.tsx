@@ -1,14 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  ExternalLink,
-  Globe,
-  Headphones,
-  Music,
-  Music2,
-  Play,
-} from "lucide-react";
+import { ExternalLink, Music, Play } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,7 +27,7 @@ export default function MusicPage() {
   return (
     <>
       {/* Hero Section */}
-      <Section size="xl" className="relative overflow-hidden">
+      <Section size="md" className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=1920&q=80"
@@ -64,60 +57,6 @@ export default function MusicPage() {
               {siteConfig.musicalExpression}
             </p>
           </motion.div>
-        </div>
-      </Section>
-
-      <Section variant="alternate" size="lg">
-        <SectionHeader
-          title="Our Traditions"
-          subtitle="Three streams flowing into one river of praise"
-        />
-        <div className="grid gap-6 md:grid-cols-3">
-          {[
-            {
-              tradition: "Gregorian",
-              description:
-                "The ancient chant of the Church, featuring meditative melodies in sacred Latin. These chants have been the foundation of Catholic liturgical music for over a millennium.",
-              icon: Music2,
-              color: "primary",
-            },
-            {
-              tradition: "Classical",
-              description:
-                "Sacred polyphony from the great masters—Mozart, Palestrina, Vivaldi, and Franck. Timeless compositions that elevate the soul through harmonic beauty.",
-              icon: Headphones,
-              color: "secondary",
-            },
-            {
-              tradition: "African",
-              description:
-                "Vibrant Swahili hymns and African rhythms that celebrate our Kenyan heritage. These songs bring energy and cultural richness to our liturgical celebrations.",
-              icon: Globe,
-              color: "accent",
-            },
-          ].map((item, index) => (
-            <motion.div
-              key={item.tradition}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <CardContent>
-                  <div
-                    className={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-${item.color}/10`}
-                  >
-                    <item.icon className={`h-7 w-7 text-${item.color}`} />
-                  </div>
-                  <h3 className="text-xl font-semibold text-text mb-3">
-                    {item.tradition}
-                  </h3>
-                  <p className="text-text-muted">{item.description}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
         </div>
       </Section>
 
@@ -260,22 +199,11 @@ export default function MusicPage() {
               Church, Nairobi, to experience our music in its fullest expression
               during the sacred liturgy.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <a href="/contact">
-                <Button size="lg" className="uppercase tracking-wider">
-                  Contact Us
-                </Button>
-              </a>
-              <a href="/about">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="uppercase tracking-wider"
-                >
-                  Learn More
-                </Button>
-              </a>
-            </div>
+            <a href="/about">
+              <Button size="lg" className="uppercase tracking-wider">
+                Learn More
+              </Button>
+            </a>
           </motion.div>
         </div>
       </Section>

@@ -16,6 +16,8 @@ export const repertoire: Song[] = [
     tradition: "african",
     massSection: "introit",
     language: "Swahili",
+    lyrics:
+      "Mungu wetu Baba, tunakuja kwako\nTunakuja kwako, ee Baba\nUtupokee sisi, watoto wako\nTunakuja kwako, ee Baba",
   },
 
   // Kyrie
@@ -41,6 +43,8 @@ export const repertoire: Song[] = [
     tradition: "african",
     massSection: "kyrie",
     language: "Swahili",
+    lyrics:
+      "Bwana utuhurumie, Bwana utuhurumie\nKristu utuhurumie, Kristu utuhurumie\nBwana utuhurumie, Bwana utuhurumie",
   },
 
   // Gloria
@@ -59,6 +63,8 @@ export const repertoire: Song[] = [
     tradition: "classical",
     massSection: "gloria",
     language: "Latin",
+    lyrics:
+      "Gloria in excelsis Deo\nEt in terra pax hominibus bonae voluntatis\nLaudamus te, benedicimus te\nAdoramus te, glorificamus te\nGratias agimus tibi propter magnam gloriam tuam",
   },
 
   // Responsorial Psalm
@@ -75,6 +81,8 @@ export const repertoire: Song[] = [
     tradition: "african",
     massSection: "responsorial",
     language: "Swahili",
+    lyrics:
+      "Bwana ni mchungaji wangu\nSitapungukiwa na kitu\nKatika malisho mema hunilaza\nPenye maji ya utulivu huniongoza",
   },
 
   // Alleluia
@@ -102,6 +110,8 @@ export const repertoire: Song[] = [
     tradition: "african",
     massSection: "offertory",
     language: "Swahili",
+    lyrics:
+      "Pokea sadaka zetu, Ee Bwana\nPokea sadaka zetu, tunazoleta\nNi ishara ya upendo wetu\nPokea sadaka zetu, Ee Bwana",
   },
 
   // Sanctus
@@ -120,6 +130,8 @@ export const repertoire: Song[] = [
     tradition: "classical",
     massSection: "sanctus",
     language: "Latin",
+    lyrics:
+      "Sanctus, Sanctus, Sanctus\nDominus Deus Sabaoth\nPleni sunt caeli et terra gloria tua\nHosanna in excelsis\nBenedictus qui venit in nomine Domini\nHosanna in excelsis",
   },
 
   // Agnus Dei
@@ -137,6 +149,8 @@ export const repertoire: Song[] = [
     tradition: "african",
     massSection: "agnus-dei",
     language: "Swahili",
+    lyrics:
+      "Mwana Kondoo wa Mungu\nUnayeondoa dhambi za ulimwengu\nUtuhurumie\nMwana Kondoo wa Mungu\nUnayeondoa dhambi za ulimwengu\nUtupe amani",
   },
 
   // Communion
@@ -154,6 +168,8 @@ export const repertoire: Song[] = [
     tradition: "african",
     massSection: "communion",
     language: "Swahili",
+    lyrics:
+      "Chakula cha roho yangu\nNi mwili wa Kristu\nKinywaji cha roho yangu\nNi damu ya Kristu\nNjooni mle, njooni mnywe\nChakula cha uzima",
   },
 
   // Recessional
@@ -171,6 +187,8 @@ export const repertoire: Song[] = [
     tradition: "african",
     massSection: "recessional",
     language: "Swahili",
+    lyrics:
+      "Twende na amani, twende na amani\nKutangaza habari njema\nTwende na amani, twende na amani\nKwa jina la Bwana",
   },
 ];
 

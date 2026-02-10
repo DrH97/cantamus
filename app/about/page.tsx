@@ -76,7 +76,7 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero Section */}
-      <Section size="xl" className="relative overflow-hidden">
+      <Section size="md" className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=1920&q=80"
@@ -326,22 +326,11 @@ export default function AboutPage() {
               Whether you&apos;re a singer looking to serve or someone who
               appreciates sacred music, we&apos;d love to connect with you.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/artists">
-                <Button size="lg" className="uppercase tracking-wider">
-                  Meet the Choir
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="uppercase tracking-wider"
-                >
-                  Get in Touch
-                </Button>
-              </Link>
-            </div>
+            <Link href="/artists">
+              <Button size="lg" className="uppercase tracking-wider">
+                Meet the Choir
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </Section>

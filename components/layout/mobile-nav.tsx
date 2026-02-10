@@ -78,7 +78,10 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             <nav className="p-4">
               <ul className="space-y-1">
                 {navItems.map((item) => {
-                  const isActive = pathname === item.href;
+                  const isActive =
+                    item.href === "/"
+                      ? pathname === "/"
+                      : pathname.startsWith(item.href);
                   return (
                     <li key={item.href}>
                       <Link

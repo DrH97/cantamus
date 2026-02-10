@@ -1,5 +1,3 @@
-export type Theme = "african" | "traditional";
-
 export type VoicePart =
   | "soprano"
   | "alto"
@@ -37,6 +35,19 @@ export interface Song {
   tradition: "gregorian" | "classical" | "african" | "contemporary";
   massSection: MassSection;
   language?: string;
+  lyrics?: string;
+}
+
+export interface MassProgramSong {
+  massSection: MassSection;
+  songId: string;
+  lyrics?: string;
+}
+
+export interface MassProgram {
+  date: string;
+  title?: string;
+  songs: MassProgramSong[];
 }
 
 export interface SiteConfig {
@@ -45,11 +56,6 @@ export interface SiteConfig {
   psalm: string;
   mission: string;
   musicalExpression: string;
-  contact: {
-    name: string;
-    email: string;
-    phone: string;
-  };
   location: {
     venue: string;
     description: string;
@@ -62,6 +68,16 @@ export interface SiteConfig {
     platform: string;
     url: string;
   }[];
+}
+
+export interface Musing {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  date: string;
+  author: string;
+  category: "liturgy" | "reflection" | "monthly";
 }
 
 export interface NavItem {

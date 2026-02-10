@@ -23,7 +23,7 @@ export default function ArtistsPage() {
   return (
     <>
       {/* Hero Section */}
-      <Section size="xl" className="relative overflow-hidden">
+      <Section size="md" className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1920&q=80"
@@ -230,9 +230,9 @@ export default function ArtistsPage() {
               We welcome singers who share our passion for sacred music and
               desire to serve the Church through their voice.
             </p>
-            <Link href="/contact">
+            <Link href="/about">
               <Button size="lg" className="uppercase tracking-wider">
-                Get in Touch
+                Learn More
               </Button>
             </Link>
           </motion.div>
