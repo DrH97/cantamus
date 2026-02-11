@@ -1,4 +1,4 @@
-import { Mail, MapPin, Music, Phone } from "lucide-react";
+import { MapPin, Music } from "lucide-react";
 import Link from "next/link";
 import { navItems, siteConfig } from "@/data/site-config";
 
@@ -52,7 +52,7 @@ export function Footer() {
 
           <div>
             <h3 className="mb-5 text-sm font-semibold tracking-[0.1em] uppercase text-primary">
-              Contact
+              Location
             </h3>
             <ul className="space-y-4 text-sm text-text-muted">
               <li className="flex items-start gap-3">
@@ -64,24 +64,6 @@ export function Footer() {
                     {siteConfig.location.description}
                   </span>
                 </span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="h-4 w-4 flex-shrink-0 text-primary" />
-                <a
-                  href={`mailto:${siteConfig.contact.email}`}
-                  className="transition-colors duration-300 hover:text-primary"
-                >
-                  {siteConfig.contact.email}
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="h-4 w-4 flex-shrink-0 text-primary" />
-                <a
-                  href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
-                  className="transition-colors duration-300 hover:text-primary"
-                >
-                  {siteConfig.contact.phone}
-                </a>
               </li>
             </ul>
           </div>

@@ -38,29 +38,6 @@
   --transition-slow: 500ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Traditional Catholic Theme */
-[data-theme="traditional"] {
-  --primary: #c9a227;
-  --primary-dark: #a8871f;
-  --primary-light: #dbb84a;
-  --secondary: #722f37;
-  --secondary-dark: #5a252c;
-  --accent: #1e3a5f;
-  --accent-dark: #152b47;
-  --background: #1c1915;
-  --background-alt: #252220;
-  --surface: #2e2a26;
-  --surface-elevated: #3a3530;
-  --text: #f5f0e8;
-  --text-muted: #b8b0a5;
-  --border: #3d3830;
-  --gold: #c9a227;
-  --gold-glow: rgba(201, 162, 39, 0.3);
-  --royal-purple: #722f37;
-  --deep-purple: #1e3a5f;
-  --obsidian: #0f0d0b;
-}
-
 /* ========================================
    TAILWIND THEME CONFIGURATION
    ======================================== */
@@ -92,7 +69,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: Georgia, "Times New Roman", serif;
-  --font-display: var(--font-playfair, Georgia, serif);
+  --font-display: Georgia, serif;
 
   /* Header height */
   --spacing-header: var(--header-height);
@@ -126,8 +103,9 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: Georgia, serif;
   line-height: 1.2;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 /* ========================================
@@ -199,13 +177,6 @@ h6 {
     linear-gradient(135deg, var(--royal-purple) 0%, transparent 50%),
     linear-gradient(225deg, var(--deep-purple) 0%, transparent 50%),
     url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d4a853' stroke-width='0.5' opacity='0.12'%3E%3Cpath d='M0 0l40 40M40 0l40 40M0 40l40 40M40 40l40 40'/%3E%3Cpath d='M20 0v80M60 0v80M0 20h80M0 60h80'/%3E%3Crect x='15' y='15' width='10' height='10'/%3E%3Crect x='55' y='15' width='10' height='10'/%3E%3Crect x='15' y='55' width='10' height='10'/%3E%3Crect x='55' y='55' width='10' height='10'/%3E%3Cpolygon points='40,5 45,15 35,15'/%3E%3Cpolygon points='40,75 45,65 35,65'/%3E%3Cpolygon points='5,40 15,45 15,35'/%3E%3Cpolygon points='75,40 65,45 65,35'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-.pattern-traditional {
-  background-color: var(--obsidian);
-  background-image:
-    linear-gradient(180deg, var(--royal-purple) 0%, transparent 30%),
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9a227' stroke-width='0.5' opacity='0.1'%3E%3Cpath d='M30 0v60M0 30h60'/%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3Cpath d='M15 15l30 30M45 15l-30 30'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* Glow effects */

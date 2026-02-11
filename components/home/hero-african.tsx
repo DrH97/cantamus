@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Music, Play, Users } from "lucide-react";
+import { Calendar, Music, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -134,20 +134,20 @@ export function HeroAfrican() {
               }}
               className="mt-10 flex flex-wrap gap-4"
             >
-              <Link href="/music">
+              <Link href="/artists">
                 <Button size="lg" className="gap-2.5 uppercase tracking-wider">
-                  <Play className="h-5 w-5" />
-                  Listen Now
+                  <Users className="h-5 w-5" />
+                  Meet the Choir
                 </Button>
               </Link>
-              <Link href="/artists">
+              <Link href="/events">
                 <Button
                   variant="outline"
                   size="lg"
                   className="gap-2.5 uppercase tracking-wider"
                 >
-                  <Users className="h-5 w-5" />
-                  Meet the Choir
+                  <Calendar className="h-5 w-5" />
+                  Schedule & Events
                 </Button>
               </Link>
             </motion.div>

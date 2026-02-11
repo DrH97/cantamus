@@ -6,11 +6,6 @@ export const siteConfig: SiteConfig = {
   psalm: "Psalm 137/138",
   mission: "Direct hearts to experience & encounter True Beauty",
   musicalExpression: "Confluence of Gregorian, Classical & African Traditions",
-  contact: {
-    name: "Lu Kimari",
-    email: "imagodei.kenya@gmail.com",
-    phone: "+254 11 55 99 275",
-  },
   location: {
     venue: "St Austin's Church, Nairobi",
     description: "Young Professionals' Mass (monthly)",
@@ -37,8 +32,9 @@ export const siteConfig: SiteConfig = {
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Artists", href: "/artists" },
   { label: "Music", href: "/music" },
-  { label: "Contact", href: "/contact" },
+  { label: "Artists", href: "/artists" },
+  { label: "Musings", href: "/musings" },
+  { label: "Events", href: "/events" },
+  { label: "About", href: "/about" },
 ];

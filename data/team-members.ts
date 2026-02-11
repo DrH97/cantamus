@@ -27,13 +27,6 @@ export const teamMembers: TeamMember[] = [
     roles: ["singer"],
   },
   {
-    id: "lu-kimari",
-    name: "Lu Kimari",
-    voicePart: "soprano",
-    roles: ["singer", "cor"],
-    isCORMember: true,
-  },
-  {
     id: "nyandia-maina",
     name: "Nyandia Maina",
     voicePart: "soprano",
@@ -88,13 +81,6 @@ export const teamMembers: TeamMember[] = [
     name: "Monty Njaaga",
     voicePart: "alto",
     roles: ["singer"],
-  },
-  {
-    id: "soni-muriuki",
-    name: "Soni Muriuki",
-    voicePart: "alto",
-    roles: ["singer", "conductor", "cor"],
-    isCORMember: true,
   },
 
   // Tenors

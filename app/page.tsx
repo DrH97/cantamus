@@ -4,10 +4,7 @@ import { motion } from "framer-motion";
 import { Calendar, Heart, Music, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { HeroAfrican } from "@/components/home/hero-african";
-import { HeroTraditional } from "@/components/home/hero-traditional";
-import { ThemeSwitcher } from "@/components/home/theme-switcher";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardIcon } from "@/components/ui/card";
 import {
@@ -16,34 +13,11 @@ import {
   SectionHeader,
 } from "@/components/ui/section";
 import { siteConfig } from "@/data/site-config";
-import type { Theme } from "@/types";
-
-const heroComponents: Record<Theme, React.ComponentType> = {
-  african: HeroAfrican,
-  traditional: HeroTraditional,
-};
 
 export default function HomePage() {
-  const [theme, setTheme] = useState<Theme>("african");
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "african") {
-      root.removeAttribute("data-theme");
-    } else {
-      root.setAttribute("data-theme", theme);
-    }
-  }, [theme]);
-
-  const HeroComponent = heroComponents[theme];
-
   return (
     <>
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-        <ThemeSwitcher currentTheme={theme} onThemeChange={setTheme} />
-      </div>
-
-      <HeroComponent />
+      <HeroAfrican />
 
       <SectionDivider />
 
@@ -218,22 +192,11 @@ export default function HomePage() {
             <p className="text-primary font-medium tracking-wide mb-10">
               {siteConfig.location.description}
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/contact">
-                <Button size="lg" className="uppercase tracking-wider">
-                  Get in Touch
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="uppercase tracking-wider"
-                >
-                  Learn More
-                </Button>
-              </Link>
-            </div>
+            <Link href="/about">
+              <Button size="lg" className="uppercase tracking-wider">
+                Learn More
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </Section>
