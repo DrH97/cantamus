@@ -1,7 +1,26 @@
 import type { MassSection, Song } from "@/types";
 
 export const repertoire: Song[] = [
+  // Prelude
+  {
+    id: "prelude-magnificat-1",
+    title: "Magnificat",
+    tradition: "classical",
+    massSection: "prelude",
+    language: "Latin",
+    lyrics: "Magnificat anima mea dominum",
+  },
+
   // Introit
+  {
+    id: "introit-antiphon-1",
+    title: "Be My Protector",
+    tradition: "gregorian",
+    massSection: "introit",
+    language: "English",
+    lyrics:
+      "Be my protector, O God, a mighty stronghold to save me.\nFor you are my rock, my stronghold.\nLead me, guide me, for the sake of your name.",
+  },
   {
     id: "introit-gregorian-1",
     title: "Introibo ad Altare Dei",
@@ -49,6 +68,15 @@ export const repertoire: Song[] = [
 
   // Gloria
   {
+    id: "gloria-african-1",
+    title: "Sifa kwa Mungu",
+    tradition: "african",
+    massSection: "gloria",
+    language: "Swahili",
+    lyrics:
+      "Sifa kwa Mungu juu mbinguni, na amani duniani, kote,\nKwa watu wenye mapenzi mema (Sifa!)\nSifa kwa Mungu juu mbinguni, na amani duniani, kote,\nKwa watu wenye mapenzi mema\n\nTunakusifu, tunakuheshimu,\ntwakuabudu Mungu, wetu.\nTwakutukuza, tunakushukuru, kwa\n'jili ya utukufu wako. (Sifa!)\n\nEe Mungu Baba, Mfalme wa mbingu,\nEe Mungu Baba Mwenyezi.\nEe Bwana Yesu, Mwana wa pekee,\nMwana kondoo, Mwana wa Baba.\n(Sifa!)\n\nUondoaye dhambi za dunia,\ntwaomba utuhurumie.\nUondoaye dhambi za dunia\nulipokee ombi letu. (Sifa)\n\nUketiye kuume kwa Baba,\ntwaomba utuhurumie.\nUondoaye dhambi za dunia,\nulipokee ombi letu. (Sifa!)\n\nNa pamoja, na pamoja, pamoja na\nRoho Mtakatifu,\nKatika utukufu wa Mungu Baba.\nAmina. (Sifa!)",
+  },
+  {
     id: "gloria-gregorian-1",
     title: "Gloria XV",
     composer: "Gregorian Chant",
@@ -70,7 +98,7 @@ export const repertoire: Song[] = [
   // Responsorial Psalm
   {
     id: "responsorial-1",
-    title: "Psalm 23 - The Lord Is My Shepherd",
+    title: "Psalm 119:1–2, 4–5, 17–18, 33–34",
     tradition: "contemporary",
     massSection: "responsorial",
     language: "English",
@@ -88,14 +116,31 @@ export const repertoire: Song[] = [
   // Alleluia
   {
     id: "alleluia-gregorian-1",
-    title: "Alleluia Mode VI",
-    composer: "Gregorian Chant",
+    title: "Alleluia",
     tradition: "gregorian",
     massSection: "alleluia",
     language: "Latin",
   },
 
   // Offertory
+  {
+    id: "offertory-contemporary-1",
+    title: "Take Our Bread",
+    tradition: "contemporary",
+    massSection: "offertory",
+    language: "English",
+    lyrics:
+      "Take our bread, we ask you,\nTake our hearts, we love you,\nTake our lives, oh Father,\nWe are yours, we are yours.\n\nYours as we stand at the table you set,\nYours as we eat the bread our hearts can't forget.\nWe are the signs of your life with us yet;\nWe are yours, we are yours.\n\nYour holy people stand washed in your blood,\nSpirit-filled, yet hungry, we await your food.\nWe are poor, but we brought ourselves the best we could.\nWe are yours, we are yours.",
+  },
+  {
+    id: "offertory-african-2",
+    title: "Tshela Moya",
+    tradition: "african",
+    massSection: "offertory",
+    language: "Sotho",
+    lyrics:
+      "Tshela moya, tshela moya, tshela moya o halelalang\nMonhadi, Messiah, tshela moya o halalelang",
+  },
   {
     id: "offertory-classical-1",
     title: "Ave Verum Corpus",
@@ -116,6 +161,15 @@ export const repertoire: Song[] = [
 
   // Sanctus
   {
+    id: "sanctus-emmanuel-1",
+    title: "Sanctus (Messe de l'Emmanuel)",
+    tradition: "classical",
+    massSection: "sanctus",
+    language: "Latin",
+    lyrics:
+      "Sanctus, Sanctus, Sanctus\nDominus Deus Sabaoth.\nPleni sunt coeli et terra\nGloria tua.\nHosanna in excelsis.\nBenedictus qui venit in nomine Domini.\nHosanna in excelsis.",
+  },
+  {
     id: "sanctus-gregorian-1",
     title: "Sanctus XVIII",
     composer: "Gregorian Chant",
@@ -134,7 +188,37 @@ export const repertoire: Song[] = [
       "Sanctus, Sanctus, Sanctus\nDominus Deus Sabaoth\nPleni sunt caeli et terra gloria tua\nHosanna in excelsis\nBenedictus qui venit in nomine Domini\nHosanna in excelsis",
   },
 
+  // Mysterium Fidei
+  {
+    id: "mysterium-fidei-neri-1",
+    title: "Mysterium Fidei (Mass of St Philip Neri)",
+    tradition: "classical",
+    massSection: "mysterium-fidei",
+    language: "English",
+    lyrics:
+      "Save us, Saviour of the world, for by your cross and resurrection, you have set us free",
+  },
+
+  // Amen
+  {
+    id: "amen-neri-1",
+    title: "Amen (Mass of St Philip Neri)",
+    tradition: "classical",
+    massSection: "amen",
+    language: "Latin",
+    lyrics: "Amen",
+  },
+
   // Agnus Dei
+  {
+    id: "agnus-dei-emmanuel-1",
+    title: "Agnus Dei (Messe de l'Emmanuel)",
+    tradition: "classical",
+    massSection: "agnus-dei",
+    language: "Latin",
+    lyrics:
+      "Agnus Dei, qui tollis peccata mundi, miserere nobis.\nAgnus Dei, qui tollis peccata mundi, miserere nobis.\nAgnus Dei, qui tollis peccata mundi, dona nobis pacem.",
+  },
   {
     id: "agnus-dei-gregorian-1",
     title: "Agnus Dei XVIII",
@@ -157,7 +241,6 @@ export const repertoire: Song[] = [
   {
     id: "communion-gregorian-1",
     title: "Panis Angelicus",
-    composer: "C. Franck",
     tradition: "classical",
     massSection: "communion",
     language: "Latin",
@@ -173,6 +256,15 @@ export const repertoire: Song[] = [
   },
 
   // Recessional
+  {
+    id: "recessional-african-2",
+    title: "Ee Maria Mama Yetu Mwema",
+    tradition: "african",
+    massSection: "recessional",
+    language: "Swahili",
+    lyrics:
+      "Ee Mama yetu Maria, twaomba sana ee mama usituache gizani kwa mwanao tuombee (x2)\n\n1. Mama yetu Maria utusikilize,\nsisi wana wako tunaposumbuka\nMaisha yetu mama hayana furaha,\ntujaze neema tupate faraja.\n\n2. Utuombee kwake mwanao mpendwa,\natutie nguvu tushinde maovu.\nDunia ina giza, dunia ni ngumu,\nbila nguvu zako hatuwezi kitu.\n\n3. Tuombee Maria, tuombee mama,\nili wana wako tufike mbinguni",
+  },
   {
     id: "recessional-1",
     title: "Salve Regina",
@@ -193,6 +285,7 @@ export const repertoire: Song[] = [
 ];
 
 export const massSectionLabels: Record<MassSection, string> = {
+  prelude: "Prelude",
   introit: "Introit",
   kyrie: "Kyrie",
   gloria: "Gloria",
@@ -200,12 +293,16 @@ export const massSectionLabels: Record<MassSection, string> = {
   alleluia: "Alleluia",
   offertory: "Offertory",
   sanctus: "Sanctus",
+  "mysterium-fidei": "Mysterium Fidei",
+  amen: "Amen",
   "agnus-dei": "Agnus Dei",
   communion: "Communion",
   recessional: "Recessional",
+  reprise: "Reprise",
 };
 
 export const massSectionOrder: MassSection[] = [
+  "prelude",
   "introit",
   "kyrie",
   "gloria",
@@ -213,9 +310,12 @@ export const massSectionOrder: MassSection[] = [
   "alleluia",
   "offertory",
   "sanctus",
+  "mysterium-fidei",
+  "amen",
   "agnus-dei",
   "communion",
   "recessional",
+  "reprise",
 ];
 
 export const traditionLabels: Record<string, string> = {

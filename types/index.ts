@@ -17,6 +17,7 @@ export interface TeamMember {
 }
 
 export type MassSection =
+  | "prelude"
   | "introit"
   | "kyrie"
   | "gloria"
@@ -24,9 +25,12 @@ export type MassSection =
   | "alleluia"
   | "offertory"
   | "sanctus"
+  | "mysterium-fidei"
+  | "amen"
   | "agnus-dei"
   | "communion"
-  | "recessional";
+  | "recessional"
+  | "reprise";
 
 export interface Song {
   id: string;

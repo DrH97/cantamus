@@ -2,66 +2,74 @@ import type { MassProgram } from "@/types";
 
 export const mass20260215: MassProgram = {
   date: "2026-02-15",
-  title: "7th Sunday in Ordinary Time",
+  title: "6th Sunday Ordinary Time, Year A",
   songs: [
     {
+      massSection: "prelude",
+      songId: "prelude-magnificat-1",
+    },
+    {
       massSection: "introit",
-      songId: "introit-african-1",
-      lyrics:
-        "Mungu wetu Baba, tunakuja kwako\nTunakuja kwako, ee Baba\nUtupokee sisi, watoto wako\nTunakuja kwako, ee Baba",
+      songId: "introit-antiphon-1",
     },
     {
       massSection: "kyrie",
       songId: "kyrie-african-1",
       lyrics:
-        "Bwana utuhurumie, Bwana utuhurumie\nKristu utuhurumie, Kristu utuhurumie\nBwana utuhurumie, Bwana utuhurumie",
+        "Bwana utuhurumie, utuhurumiee x2\nBwana, utuhurumie x2\n\nKristu utuhurumie, utuhurumiee x2\nKristu, utuhurumie x2\n\nBwana utuhurumie, utuhurumiee x2\nBwana, utuhurumie x2",
     },
     {
       massSection: "gloria",
-      songId: "gloria-classical-1",
-      lyrics:
-        "Gloria in excelsis Deo\nEt in terra pax hominibus bonae voluntatis\nLaudamus te, benedicimus te\nAdoramus te, glorificamus te\nGratias agimus tibi propter magnam gloriam tuam",
+      songId: "gloria-african-1",
     },
     {
       massSection: "responsorial",
-      songId: "responsorial-african-1",
-      lyrics:
-        "Bwana ni mchungaji wangu\nSitapungukiwa na kitu\nKatika malisho mema hunilaza\nPenye maji ya utulivu huniongoza",
+      songId: "responsorial-1",
+      lyrics: "Blessed are those who walk in the law of the Lord",
     },
     {
       massSection: "alleluia",
       songId: "alleluia-gregorian-1",
-      lyrics: "Alleluia, alleluia, alleluia\nAlleluia, alleluia, alleluia",
+      lyrics:
+        "Alleluia\n\nBlessed are you, Father, Lord of heaven and earth, that you have revealed to little ones the mysteries of the kingdom.\n\nAlleluia",
     },
     {
       massSection: "offertory",
-      songId: "offertory-african-1",
-      lyrics:
-        "Pokea sadaka zetu, Ee Bwana\nPokea sadaka zetu, tunazoleta\nNi ishara ya upendo wetu\nPokea sadaka zetu, Ee Bwana",
+      songId: "offertory-contemporary-1",
+    },
+    {
+      massSection: "offertory",
+      songId: "offertory-african-2",
     },
     {
       massSection: "sanctus",
-      songId: "sanctus-classical-1",
-      lyrics:
-        "Sanctus, Sanctus, Sanctus\nDominus Deus Sabaoth\nPleni sunt caeli et terra gloria tua\nHosanna in excelsis\nBenedictus qui venit in nomine Domini\nHosanna in excelsis",
+      songId: "sanctus-emmanuel-1",
+    },
+    {
+      massSection: "mysterium-fidei",
+      songId: "mysterium-fidei-neri-1",
+    },
+    {
+      massSection: "amen",
+      songId: "amen-neri-1",
     },
     {
       massSection: "agnus-dei",
-      songId: "agnus-dei-african-1",
-      lyrics:
-        "Mwana Kondoo wa Mungu\nUnayeondoa dhambi za ulimwengu\nUtuhurumie\nMwana Kondoo wa Mungu\nUnayeondoa dhambi za ulimwengu\nUtupe amani",
+      songId: "agnus-dei-emmanuel-1",
     },
     {
       massSection: "communion",
-      songId: "communion-african-1",
+      songId: "communion-gregorian-1",
       lyrics:
-        "Chakula cha roho yangu\nNi mwili wa Kristu\nKinywaji cha roho yangu\nNi damu ya Kristu\nNjooni mle, njooni mnywe\nChakula cha uzima",
+        "Panis angelicus\nfit panis hominum;\nDat panis cœlicus\nfiguris terminum;\nO res mirabilis!\nManducat Dominum\nPauper, Pauper, servus et humilis.",
     },
     {
       massSection: "recessional",
-      songId: "recessional-african-1",
-      lyrics:
-        "Twende na amani, twende na amani\nKutangaza habari njema\nTwende na amani, twende na amani\nKwa jina la Bwana",
+      songId: "recessional-african-2",
+    },
+    {
+      massSection: "reprise",
+      songId: "prelude-magnificat-1",
     },
   ],
 };
