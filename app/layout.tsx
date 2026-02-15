@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
@@ -46,6 +47,7 @@ export default function RootLayout({
         <Header />
         <main className="min-h-screen pt-header">{children}</main>
         <Footer />
+        <SpeedInsights />
       </body>
     </html>
   );
