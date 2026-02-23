@@ -15,6 +15,9 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function MusingsPage() {
+  const intro = musings.find((m) => m.id === "introduction");
+  const monthlyMusings = musings.filter((m) => m.category === "monthly");
+
   return (
     <>
       {/* Hero Section */}
@@ -39,33 +42,86 @@ export default function MusingsPage() {
           >
             <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-semibold tracking-wider uppercase text-primary mb-6 border border-primary/20">
               <BookOpen className="h-4 w-4" />
-              Liturgical Reflections
+              Sacred Music Reflections
             </span>
             <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-gradient-gold">
               Musings
             </h1>
             <p className="mt-6 text-xl text-text-muted">
-              Thoughts on liturgy, sacred music, and the rhythm of the
-              liturgical year
+              A monthly series on sacred music, liturgy, and the rhythm of the
+              liturgical year by Robert Odero
             </p>
           </motion.div>
         </div>
       </Section>
 
-      {/* Musings List */}
+      {/* Introduction - Featured */}
+      {intro && (
+        <Section size="lg">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+            >
+              <Link href={`/musings/${intro.id}`} className="block">
+                <Card className="hover:shadow-lg transition-shadow group">
+                  <CardContent className="p-6 md:p-8">
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded ${categoryColors[intro.category]}`}
+                      >
+                        {categoryLabels[intro.category]}
+                      </span>
+                      <div className="flex items-center gap-1 text-xs text-text-muted">
+                        <Calendar className="h-3 w-3" />
+                        <time dateTime={intro.date}>
+                          {new Date(intro.date).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </time>
+                      </div>
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-text mb-3 group-hover:text-primary transition-colors">
+                      {intro.title}
+                    </h2>
+                    <p className="text-text-muted leading-relaxed mb-4 max-w-2xl">
+                      {intro.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1 text-xs text-text-muted">
+                        <User className="h-3 w-3" />
+                        <span>{intro.author}</span>
+                      </div>
+                      <span className="flex items-center gap-1 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                        Read introduction <ArrowRight className="h-4 w-4" />
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          </div>
+        </Section>
+      )}
+
+      {/* Monthly Series */}
       <Section size="lg">
         <SectionHeader
-          title="Latest Writings"
-          subtitle="Liturgical write-ups and monthly reflections from the Cantamus community"
+          title="Monthly Series"
+          subtitle="Twelve essays exploring sacred music through the liturgical year"
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto">
-          {musings.map((musing, index) => (
+          {monthlyMusings.map((musing, index) => (
             <motion.div
               key={musing.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
             >
               <Link href={`/musings/${musing.id}`} className="block h-full">
                 <Card className="h-full hover:shadow-lg transition-shadow group">

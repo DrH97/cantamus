@@ -82,6 +82,7 @@ export interface Musing {
   date: string;
   author: string;
   category: "liturgy" | "reflection" | "monthly";
+  pdfUrl?: string;
 }
 
 export interface NavItem {
