@@ -115,53 +115,49 @@ export default function MusingsPage() {
           subtitle="Twelve essays exploring sacred music through the liturgical year"
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto">
-          {monthlyMusings.map((musing, index) => (
-            <motion.div
+          {monthlyMusings.map((musing) => (
+            <Link
               key={musing.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
+              href={`/musings/${musing.id}`}
+              className="block h-full"
             >
-              <Link href={`/musings/${musing.id}`} className="block h-full">
-                <Card className="h-full hover:shadow-lg transition-shadow group">
-                  <CardContent>
-                    <div className="flex items-center justify-between gap-3 mb-3">
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded ${categoryColors[musing.category]}`}
-                      >
-                        {categoryLabels[musing.category]}
-                      </span>
-                      <div className="flex items-center gap-1 text-xs text-text-muted">
-                        <Calendar className="h-3 w-3" />
-                        <time dateTime={musing.date}>
-                          {new Date(musing.date).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })}
-                        </time>
-                      </div>
+              <Card className="h-full hover:shadow-lg transition-shadow group">
+                <CardContent>
+                  <div className="flex items-center justify-between gap-3 mb-3">
+                    <span
+                      className={`px-2 py-1 text-xs font-medium rounded ${categoryColors[musing.category]}`}
+                    >
+                      {categoryLabels[musing.category]}
+                    </span>
+                    <div className="flex items-center gap-1 text-xs text-text-muted">
+                      <Calendar className="h-3 w-3" />
+                      <time dateTime={musing.date}>
+                        {new Date(musing.date).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </time>
                     </div>
-                    <h3 className="text-lg font-semibold text-text mb-2 group-hover:text-primary transition-colors">
-                      {musing.title}
-                    </h3>
-                    <p className="text-sm text-text-muted leading-relaxed mb-4">
-                      {musing.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-xs text-text-muted">
-                        <User className="h-3 w-3" />
-                        <span>{musing.author}</span>
-                      </div>
-                      <span className="flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                        Read more <ArrowRight className="h-3 w-3" />
-                      </span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-text mb-2 group-hover:text-primary transition-colors">
+                    {musing.title}
+                  </h3>
+                  <p className="text-sm text-text-muted leading-relaxed mb-4">
+                    {musing.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-xs text-text-muted">
+                      <User className="h-3 w-3" />
+                      <span>{musing.author}</span>
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
+                    <span className="flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                      Read more <ArrowRight className="h-3 w-3" />
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </Section>
