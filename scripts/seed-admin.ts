@@ -10,6 +10,7 @@ import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "../db/schema";
 
 const DB_URL = process.env.DATABASE_URL ?? "file:./data/local.db";
+const DB_TOKEN = process.env.DATABASE_AUTH_TOKEN;
 
 async function main() {
   const username = process.env.ADMIN_USER ?? "admin";
@@ -21,7 +22,7 @@ async function main() {
     process.exit(1);
   }
 
-  const client = createClient({ url: DB_URL });
+  const client = createClient({ url: DB_URL, authToken: DB_TOKEN });
   const db = drizzle(client, { schema });
 
   const passwordHash = await hash(password, 12);

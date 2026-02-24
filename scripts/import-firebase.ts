@@ -11,6 +11,7 @@ import * as schema from "../db/schema";
 
 const FIREBASE_PATH = "/home/jack/Downloads/succ-3d591-export.json";
 const DB_URL = process.env.DATABASE_URL ?? "file:./data/local.db";
+const DB_TOKEN = process.env.DATABASE_AUTH_TOKEN;
 
 // ── Category mapping ────────────────────────────────────────────────
 const PACK_NAME_TO_CATEGORY: Record<
@@ -90,7 +91,7 @@ async function main() {
   const raw = readFileSync(FIREBASE_PATH, "utf-8");
   const data = JSON.parse(raw);
 
-  const client = createClient({ url: DB_URL });
+  const client = createClient({ url: DB_URL, authToken: DB_TOKEN });
   const db = drizzle(client, { schema });
 
   // Clear existing data (idempotent re-runs)
