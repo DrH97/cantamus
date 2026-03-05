@@ -1,12 +1,9 @@
-import { existsSync } from "node:fs";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { updateHymn } from "@/lib/db/mutations/hymns";
 import { getHymnWithVerses } from "@/lib/db/queries/hymns";
 
-const SCORES_DIR = join(process.cwd(), "public", "scores");
 const ALLOWED_TYPES = new Set([
   "application/pdf",
   "image/png",
@@ -14,16 +11,6 @@ const ALLOWED_TYPES = new Set([
   "image/webp",
 ]);
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
-
-function getExtension(mime: string): string {
-  const map: Record<string, string> = {
-    "application/pdf": "pdf",
-    "image/png": "png",
-    "image/jpeg": "jpg",
-    "image/webp": "webp",
-  };
-  return map[mime] ?? "bin";
-}
 
 export async function POST(
   request: Request,
@@ -59,34 +46,29 @@ export async function POST(
     );
   }
 
-  // Delete old score file if it exists
   const hymn = await getHymnWithVerses(hymnId);
   if (!hymn) {
     return NextResponse.json({ error: "Hymn not found" }, { status: 404 });
   }
 
-  if (hymn.scoreUrl?.startsWith("/scores/")) {
-    const oldPath = join(process.cwd(), "public", hymn.scoreUrl);
-    if (existsSync(oldPath)) {
-      await unlink(oldPath);
+  // Delete old blob if it exists
+  if (hymn.scoreUrl) {
+    try {
+      await del(hymn.scoreUrl);
+    } catch {
+      // Old URL might not be a blob URL, ignore
     }
   }
 
-  // Save new file
-  if (!existsSync(SCORES_DIR)) {
-    await mkdir(SCORES_DIR, { recursive: true });
-  }
+  const ext = file.name.split(".").pop() ?? "bin";
+  const blob = await put(`scores/${hymnId}-${Date.now()}.${ext}`, file, {
+    access: "public",
+    contentType: file.type,
+  });
 
-  const ext = getExtension(file.type);
-  const filename = `${hymnId}-${Date.now()}.${ext}`;
-  const filepath = join(SCORES_DIR, filename);
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(filepath, buffer);
+  await updateHymn(hymnId, { scoreUrl: blob.url });
 
-  const scoreUrl = `/scores/${filename}`;
-  await updateHymn(hymnId, { scoreUrl });
-
-  return NextResponse.json({ scoreUrl });
+  return NextResponse.json({ scoreUrl: blob.url });
 }
 
 export async function DELETE(
@@ -107,10 +89,11 @@ export async function DELETE(
     return NextResponse.json({ error: "Hymn not found" }, { status: 404 });
   }
 
-  if (hymn.scoreUrl?.startsWith("/scores/")) {
-    const oldPath = join(process.cwd(), "public", hymn.scoreUrl);
-    if (existsSync(oldPath)) {
-      await unlink(oldPath);
+  if (hymn.scoreUrl) {
+    try {
+      await del(hymn.scoreUrl);
+    } catch {
+      // Ignore if not a blob URL
     }
   }
 
