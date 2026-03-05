@@ -4,11 +4,14 @@ import { Heart, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 interface Hymn {
-  id: string;
+  id: number;
   title: string;
   composer: string | null;
-  hymnal: string | null;
-  isWedding: boolean;
+  tags: { tag: string }[];
+}
+
+function hasTag(hymn: Hymn, tag: string): boolean {
+  return hymn.tags.some((t) => t.tag === tag);
 }
 
 export default function AdminWeddingPage() {
@@ -23,10 +26,11 @@ export default function AdminWeddingPage() {
     const res = await fetch(`/api/admin/hymns?${params}`);
     if (res.ok) {
       const all: Hymn[] = await res.json();
-      // Show wedding hymns first, then others
       all.sort((a, b) => {
-        if (a.isWedding && !b.isWedding) return -1;
-        if (!a.isWedding && b.isWedding) return 1;
+        const aWedding = hasTag(a, "wedding");
+        const bWedding = hasTag(b, "wedding");
+        if (aWedding && !bWedding) return -1;
+        if (!aWedding && bWedding) return 1;
         return a.title.localeCompare(b.title);
       });
       setHymns(all);
@@ -38,21 +42,26 @@ export default function AdminWeddingPage() {
     fetchHymns();
   }, [fetchHymns]);
 
-  async function toggleWedding(id: string) {
+  async function toggleWedding(id: number) {
     const res = await fetch(`/api/admin/hymns/${id}/wedding`, {
       method: "PATCH",
     });
     if (res.ok) {
       const data = await res.json();
       setHymns((prev) =>
-        prev.map((h) =>
-          h.id === id ? { ...h, isWedding: data.isWedding } : h,
-        ),
+        prev.map((h) => {
+          if (h.id !== id) return h;
+          const filtered = h.tags.filter((t) => t.tag !== "wedding");
+          return {
+            ...h,
+            tags: data.isWedding ? [...filtered, { tag: "wedding" }] : filtered,
+          };
+        }),
       );
     }
   }
 
-  const weddingCount = hymns.filter((h) => h.isWedding).length;
+  const weddingCount = hymns.filter((h) => hasTag(h, "wedding")).length;
 
   return (
     <div>
@@ -76,42 +85,43 @@ export default function AdminWeddingPage() {
         <p className="text-text-muted">Loading…</p>
       ) : (
         <div className="space-y-1">
-          {hymns.map((hymn) => (
-            <div
-              key={hymn.id}
-              className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
-                hymn.isWedding
-                  ? "bg-pink-950/20 border-pink-500/30"
-                  : "bg-surface border-border"
-              }`}
-            >
-              <div>
-                <span className="text-sm text-text">{hymn.title}</span>
-                {hymn.composer && (
-                  <span className="text-xs text-text-muted ml-2">
-                    {hymn.composer}
-                  </span>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={() => toggleWedding(hymn.id)}
-                className={`p-1 rounded transition-colors ${
-                  hymn.isWedding
-                    ? "text-pink-400"
-                    : "text-text-muted hover:text-pink-400"
+          {hymns.map((hymn) => {
+            const isWedding = hasTag(hymn, "wedding");
+            return (
+              <div
+                key={hymn.id}
+                className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                  isWedding
+                    ? "bg-pink-950/20 border-pink-500/30"
+                    : "bg-surface border-border"
                 }`}
-                title={
-                  hymn.isWedding ? "Remove from wedding" : "Add to wedding"
-                }
               >
-                <Heart
-                  className="h-4 w-4"
-                  fill={hymn.isWedding ? "currentColor" : "none"}
-                />
-              </button>
-            </div>
-          ))}
+                <div>
+                  <span className="text-sm text-text">{hymn.title}</span>
+                  {hymn.composer && (
+                    <span className="text-xs text-text-muted ml-2">
+                      {hymn.composer}
+                    </span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toggleWedding(hymn.id)}
+                  className={`p-1 rounded transition-colors ${
+                    isWedding
+                      ? "text-pink-400"
+                      : "text-text-muted hover:text-pink-400"
+                  }`}
+                  title={isWedding ? "Remove from wedding" : "Add to wedding"}
+                >
+                  <Heart
+                    className="h-4 w-4"
+                    fill={isWedding ? "currentColor" : "none"}
+                  />
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

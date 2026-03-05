@@ -37,7 +37,9 @@ export interface Song {
   title: string;
   composer?: string;
   tradition: "gregorian" | "classical" | "african" | "contemporary";
-  massSection: MassSection;
+  tags?: string[];
+  link?: string;
+  scoreUrl?: string;
   language?: string;
   lyrics?: string;
 }

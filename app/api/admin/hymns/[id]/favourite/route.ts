@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { toggleFavourite } from "@/lib/db/mutations/hymns";
+import { toggleTag } from "@/lib/db/mutations/hymns";
 
 export async function PATCH(
   _request: Request,
@@ -13,7 +13,7 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const newValue = await toggleFavourite(id);
+  const newValue = await toggleTag(Number(id), "favourite");
   if (newValue === null) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }

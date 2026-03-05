@@ -20,12 +20,12 @@ export async function GET(
   }
 
   const { id } = await params;
-  const program = await getMassProgramById(id);
+  const program = await getMassProgramById(Number(id));
   if (!program) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const songs = await getMassProgramSongsById(id);
+  const songs = await getMassProgramSongsById(Number(id));
   return NextResponse.json({ ...program, songs });
 }
 
@@ -41,7 +41,7 @@ export async function PUT(
 
   const { id } = await params;
   const body = await request.json();
-  await updateMassProgram(id, body);
+  await updateMassProgram(Number(id), body);
   return NextResponse.json({ ok: true });
 }
 
@@ -56,6 +56,6 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  await deleteMassProgram(id);
+  await deleteMassProgram(Number(id));
   return NextResponse.json({ ok: true });
 }

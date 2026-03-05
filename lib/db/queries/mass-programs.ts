@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { hymns, hymnVerses, massProgramSongs, massPrograms } from "@/db/schema";
 
@@ -25,6 +25,8 @@ export async function getMassProgramWithSongs(date: string) {
       hymnComposer: hymns.composer,
       hymnTradition: hymns.tradition,
       hymnLanguage: hymns.language,
+      hymnLink: hymns.link,
+      hymnScoreUrl: hymns.scoreUrl,
     })
     .from(massProgramSongs)
     .innerJoin(hymns, eq(massProgramSongs.hymnId, hymns.id))
@@ -43,8 +45,13 @@ export async function getMassProgramWithSongs(date: string) {
 
   // Group verses by hymnId
   const versesByHymn = new Map<
-    string,
-    { verseNumber: number; verseText: string; isChorus: boolean }[]
+    number,
+    {
+      verseNumber: number;
+      verseText: string;
+      isChorus: boolean;
+      language: string;
+    }[]
   >();
   for (const v of verses) {
     const list = versesByHymn.get(v.hymnId) ?? [];
@@ -52,6 +59,7 @@ export async function getMassProgramWithSongs(date: string) {
       verseNumber: v.verseNumber,
       verseText: v.verseText,
       isChorus: v.isChorus,
+      language: v.language,
     });
     versesByHymn.set(v.hymnId, list);
   }
@@ -78,13 +86,13 @@ export async function hasMassProgramForDate(date: string) {
   return !!result;
 }
 
-export async function getMassProgramById(id: string) {
+export async function getMassProgramById(id: number) {
   return db.query.massPrograms.findFirst({
     where: eq(massPrograms.id, id),
   });
 }
 
-export async function getMassProgramSongsById(programId: string) {
+export async function getMassProgramSongsById(programId: number) {
   return db
     .select({
       id: massProgramSongs.id,
@@ -96,6 +104,8 @@ export async function getMassProgramSongsById(programId: string) {
       hymnComposer: hymns.composer,
       hymnTradition: hymns.tradition,
       hymnLanguage: hymns.language,
+      hymnLink: hymns.link,
+      hymnScoreUrl: hymns.scoreUrl,
     })
     .from(massProgramSongs)
     .innerJoin(hymns, eq(massProgramSongs.hymnId, hymns.id))
@@ -104,6 +114,26 @@ export async function getMassProgramSongsById(programId: string) {
 }
 
 export async function getMassProgramCount() {
-  const all = await db.select({ id: massPrograms.id }).from(massPrograms);
-  return all.length;
+  const [row] = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(massPrograms);
+  return row.count;
+}
+
+export async function getUpcomingPrograms(limit = 5) {
+  const today = new Date().toISOString().split("T")[0];
+  return db.query.massPrograms.findMany({
+    where: sql`${massPrograms.date} >= ${today}`,
+    orderBy: massPrograms.date,
+    limit,
+  });
+}
+
+export async function getRecentPrograms(limit = 5) {
+  const today = new Date().toISOString().split("T")[0];
+  return db.query.massPrograms.findMany({
+    where: sql`${massPrograms.date} < ${today}`,
+    orderBy: sql`${massPrograms.date} DESC`,
+    limit,
+  });
 }

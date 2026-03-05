@@ -14,7 +14,7 @@ export async function GET(
   }
 
   const { id } = await params;
-  const hymn = await getHymnWithVerses(id);
+  const hymn = await getHymnWithVerses(Number(id));
   if (!hymn) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -33,7 +33,7 @@ export async function PUT(
 
   const { id } = await params;
   const body = await request.json();
-  await updateHymn(id, body);
+  await updateHymn(Number(id), body);
   return NextResponse.json({ ok: true });
 }
 
@@ -48,6 +48,6 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  await deleteHymn(id);
+  await deleteHymn(Number(id));
   return NextResponse.json({ ok: true });
 }

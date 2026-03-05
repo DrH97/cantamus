@@ -3,26 +3,8 @@ import type { TeamMember } from "@/types";
 export const teamMembers: TeamMember[] = [
   // Sopranos
   {
-    id: "brittany-mungara",
-    name: "Brittany Mungara",
-    voicePart: "soprano",
-    roles: ["singer"],
-  },
-  {
-    id: "kathleen-jean-pierre",
-    name: "Kathleen Jean-Pierre",
-    voicePart: "soprano",
-    roles: ["singer"],
-  },
-  {
     id: "faith-kisio",
     name: "Faith Kisio",
-    voicePart: "soprano",
-    roles: ["singer"],
-  },
-  {
-    id: "marion-kimathi",
-    name: "Marion Kimathi",
     voicePart: "soprano",
     roles: ["singer"],
   },
@@ -33,28 +15,64 @@ export const teamMembers: TeamMember[] = [
     roles: ["singer"],
   },
   {
-    id: "njoki-fernandes",
-    name: "Njoki Fernandes",
+    id: "kathleen-jean-pierre",
+    name: "Kathleen Jean-Pierre",
+    voicePart: "soprano",
+    roles: ["singer"],
+  },
+  {
+    id: "tania",
+    name: "Tania",
+    voicePart: "soprano",
+    roles: ["singer"],
+  },
+  {
+    id: "terry",
+    name: "Terry",
+    voicePart: "soprano",
+    roles: ["singer"],
+  },
+  {
+    id: "laura",
+    name: "Laura",
+    voicePart: "soprano",
+    roles: ["singer"],
+  },
+  {
+    id: "marion-kimathi",
+    name: "Marion Kimathi",
+    voicePart: "soprano",
+    roles: ["singer"],
+  },
+  {
+    id: "brittany-mungara",
+    name: "Brittany Mungara",
+    voicePart: "soprano",
+    roles: ["singer"],
+  },
+  {
+    id: "bernadine",
+    name: "Bernadine",
     voicePart: "soprano",
     roles: ["singer"],
   },
 
   // Altos
   {
-    id: "chiri-ngelechei",
-    name: "Chiri Ngelechei",
-    voicePart: "alto",
-    roles: ["singer"],
-  },
-  {
-    id: "lynette-muema",
-    name: "Lynette Muema",
-    voicePart: "alto",
-    roles: ["singer"],
-  },
-  {
     id: "frida-ombogo",
     name: "Frida Ombogo",
+    voicePart: "alto",
+    roles: ["singer"],
+  },
+  {
+    id: "madeline-kanyadudi",
+    name: "Madeline Kanyadudi",
+    voicePart: "alto",
+    roles: ["singer"],
+  },
+  {
+    id: "olga",
+    name: "Olga",
     voicePart: "alto",
     roles: ["singer"],
   },
@@ -65,8 +83,8 @@ export const teamMembers: TeamMember[] = [
     roles: ["singer"],
   },
   {
-    id: "madeline-kanyadudi",
-    name: "Madeline Kanyadudi",
+    id: "leah",
+    name: "Leah",
     voicePart: "alto",
     roles: ["singer"],
   },
@@ -85,37 +103,79 @@ export const teamMembers: TeamMember[] = [
 
   // Tenors
   {
-    id: "david-ngethe",
-    name: "David Ng'ethe",
+    id: "irush",
+    name: "Irush",
     voicePart: "tenor",
     roles: ["singer"],
   },
   {
-    id: "michael-makonnen",
-    name: "Michael Makonnen",
+    id: "jm",
+    name: "JM",
+    voicePart: "tenor",
+    roles: ["singer"],
+  },
+  {
+    id: "jerome",
+    name: "Jerome",
+    voicePart: "tenor",
+    roles: ["singer"],
+  },
+  {
+    id: "ryan",
+    name: "Ryan",
+    voicePart: "tenor",
+    roles: ["singer"],
+  },
+  {
+    id: "karoli",
+    name: "Karoli",
     voicePart: "tenor",
     roles: ["singer"],
   },
 
   // Basses
   {
-    id: "bob-odero",
-    name: "Bob Odero",
-    voicePart: "bass",
-    roles: ["singer", "cor"],
-    isCORMember: true,
-  },
-  {
-    id: "james-mburu",
-    name: "James Mburu",
-    voicePart: "bass",
-    roles: ["singer"],
-  },
-  {
     id: "sam-kariuki",
     name: "Sam Kariuki",
     voicePart: "bass",
     roles: ["singer", "conductor", "cor"],
+    isCORMember: true,
+  },
+  {
+    id: "jamo",
+    name: "Jamo",
+    voicePart: "bass",
+    roles: ["singer"],
+  },
+  {
+    id: "michael-makonnen",
+    name: "Michael Makonnen",
+    voicePart: "bass",
+    roles: ["singer"],
+  },
+  {
+    id: "dave",
+    name: "Dave",
+    voicePart: "bass",
+    roles: ["singer"],
+  },
+  {
+    id: "barry",
+    name: "Barry",
+    voicePart: "bass",
+    roles: ["singer"],
+  },
+  {
+    id: "anto",
+    name: "Anto",
+    voicePart: "bass",
+    roles: ["singer"],
+  },
+  {
+    id: "bob-odero",
+    name: "Bob Odero",
+    voicePart: "bass",
+    roles: ["singer", "cor"],
     isCORMember: true,
   },
 

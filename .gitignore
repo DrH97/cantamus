@@ -51,3 +51,7 @@ next-env.d.ts
 data/*.db
 data/*.db-journal
 data/*.db-wal
+
+# Uploaded scores (keep directory, ignore files)
+public/scores/*
+!public/scores/.gitkeep

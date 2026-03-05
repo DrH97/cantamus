@@ -77,7 +77,7 @@ export async function login(
   const valid = await compare(password, user.passwordHash);
   if (!valid) return false;
 
-  const token = await signToken(user.id);
+  const token = await signToken(String(user.id));
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,

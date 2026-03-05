@@ -6,54 +6,53 @@ export async function createMassProgram(data: {
   date: string;
   title?: string;
 }) {
-  const id = crypto.randomUUID();
-  await db.insert(massPrograms).values({
-    id,
-    date: data.date,
-    title: data.title ?? null,
-  });
-  return id;
+  const [row] = await db
+    .insert(massPrograms)
+    .values({ date: data.date, title: data.title ?? null })
+    .returning({ id: massPrograms.id });
+  return row.id;
 }
 
 export async function updateMassProgram(
-  id: string,
+  id: number,
   data: { date?: string; title?: string | null },
 ) {
   await db
     .update(massPrograms)
-    .set({ ...data, updatedAt: sql`(datetime('now'))` })
+    .set({ ...data, updatedAt: sql`(unixepoch())` })
     .where(eq(massPrograms.id, id));
 }
 
-export async function deleteMassProgram(id: string) {
+export async function deleteMassProgram(id: number) {
   await db.delete(massPrograms).where(eq(massPrograms.id, id));
 }
 
 export async function addSongToProgram(data: {
-  massProgramId: string;
-  hymnId: string;
+  massProgramId: number;
+  hymnId: number;
   massSection: string;
   sortOrder: number;
   lyricsOverride?: string;
 }) {
-  const id = crypto.randomUUID();
-  await db.insert(massProgramSongs).values({
-    id,
-    massProgramId: data.massProgramId,
-    hymnId: data.hymnId,
-    massSection: data.massSection,
-    sortOrder: data.sortOrder,
-    lyricsOverride: data.lyricsOverride ?? null,
-  });
-  return id;
+  const [row] = await db
+    .insert(massProgramSongs)
+    .values({
+      massProgramId: data.massProgramId,
+      hymnId: data.hymnId,
+      massSection: data.massSection,
+      sortOrder: data.sortOrder,
+      lyricsOverride: data.lyricsOverride ?? null,
+    })
+    .returning({ id: massProgramSongs.id });
+  return row.id;
 }
 
-export async function removeSongFromProgram(songId: string) {
+export async function removeSongFromProgram(songId: number) {
   await db.delete(massProgramSongs).where(eq(massProgramSongs.id, songId));
 }
 
 export async function updateProgramSong(
-  songId: string,
+  songId: number,
   data: {
     massSection?: string;
     sortOrder?: number;

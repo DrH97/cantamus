@@ -1,52 +1,47 @@
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { hymns } from "@/db/schema";
+import { hymns, hymnTags } from "@/db/schema";
 
-export async function toggleFavourite(id: string) {
+export async function toggleTag(id: number, tag: string) {
   const hymn = await db.query.hymns.findFirst({
     where: eq(hymns.id, id),
-    columns: { isFavourite: true },
+    columns: { id: true },
   });
   if (!hymn) return null;
 
-  const newValue = !hymn.isFavourite;
-  await db
-    .update(hymns)
-    .set({ isFavourite: newValue, updatedAt: sql`(datetime('now'))` })
-    .where(eq(hymns.id, id));
-  return newValue;
-}
-
-export async function toggleWedding(id: string) {
-  const hymn = await db.query.hymns.findFirst({
-    where: eq(hymns.id, id),
-    columns: { isWedding: true },
+  const existing = await db.query.hymnTags.findFirst({
+    where: and(eq(hymnTags.hymnId, id), eq(hymnTags.tag, tag)),
   });
-  if (!hymn) return null;
 
-  const newValue = !hymn.isWedding;
-  await db
-    .update(hymns)
-    .set({ isWedding: newValue, updatedAt: sql`(datetime('now'))` })
-    .where(eq(hymns.id, id));
-  return newValue;
+  if (existing) {
+    await db
+      .delete(hymnTags)
+      .where(and(eq(hymnTags.hymnId, id), eq(hymnTags.tag, tag)));
+    return false;
+  }
+
+  await db.insert(hymnTags).values({ hymnId: id, tag });
+  return true;
 }
 
 export async function updateHymn(
-  id: string,
+  id: number,
   data: {
     title?: string;
     composer?: string | null;
     tradition?: string | null;
     language?: string | null;
+    hymnal?: string | null;
+    link?: string | null;
+    scoreUrl?: string | null;
   },
 ) {
   await db
     .update(hymns)
-    .set({ ...data, updatedAt: sql`(datetime('now'))` })
+    .set({ ...data, updatedAt: sql`(unixepoch())` })
     .where(eq(hymns.id, id));
 }
 
-export async function deleteHymn(id: string) {
+export async function deleteHymn(id: number) {
   await db.delete(hymns).where(eq(hymns.id, id));
 }

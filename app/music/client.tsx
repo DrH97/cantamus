@@ -10,11 +10,12 @@ import { siteConfig } from "@/data/site-config";
 import type { MassSection } from "@/types";
 
 interface Hymn {
-  id: string;
+  id: number;
   title: string;
   composer: string | null;
   tradition: string | null;
   language: string | null;
+  link: string | null;
 }
 
 const traditionColors: Record<string, string> = {
@@ -114,6 +115,17 @@ export function MusicPageClient({
                       <p className="mt-2 text-xs text-text-muted">
                         Language: {song.language}
                       </p>
+                    )}
+                    {song.link && (
+                      <a
+                        href={song.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 mt-2 text-xs text-primary hover:text-primary-dark transition-colors"
+                      >
+                        <Play className="h-3 w-3" />
+                        Listen
+                      </a>
                     )}
                   </CardContent>
                 </Card>

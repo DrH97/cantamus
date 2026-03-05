@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { getAllHymns, searchHymns } from "@/lib/db/queries/hymns";
+import { createHymn, getAllHymns, searchHymns } from "@/lib/db/queries/hymns";
 
 export async function GET(request: Request) {
   try {
@@ -19,4 +19,20 @@ export async function GET(request: Request) {
     : await getAllHymns(limit, offset);
 
   return NextResponse.json(hymns);
+}
+
+export async function POST(request: Request) {
+  try {
+    await requireAuth();
+  } catch {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await request.json();
+  if (!body.title?.trim()) {
+    return NextResponse.json({ error: "Title is required" }, { status: 400 });
+  }
+
+  const id = await createHymn(body);
+  return NextResponse.json({ id }, { status: 201 });
 }

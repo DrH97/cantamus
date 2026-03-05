@@ -1,16 +1,28 @@
 "use client";
 
-import { Calendar, Plus } from "lucide-react";
+import { Calendar, ExternalLink, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { useToast } from "@/components/admin/toast";
 
 interface MassProgram {
-  id: string;
+  id: number;
   date: string;
   title: string | null;
 }
 
+function formatDate(dateStr: string): string {
+  const date = new Date(`${dateStr}T00:00:00`);
+  return date.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export default function AdminMassProgramsPage() {
+  const { toast } = useToast();
   const [programs, setPrograms] = useState<MassProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -39,18 +51,28 @@ export default function AdminMassProgramsPage() {
     if (res.ok) {
       setShowForm(false);
       fetchPrograms();
+      toast("Program created");
+    } else {
+      toast("Failed to create program", "error");
     }
   }
 
-  async function handleDelete(id: string) {
+  async function handleDelete(id: number) {
     if (!confirm("Delete this mass program?")) return;
     const res = await fetch(`/api/admin/mass-programs/${id}`, {
       method: "DELETE",
     });
-    if (res.ok) fetchPrograms();
+    if (res.ok) {
+      fetchPrograms();
+      toast("Program deleted");
+    }
   }
 
-  if (loading) return <p className="text-text-muted">Loading…</p>;
+  const today = new Date().toISOString().split("T")[0];
+  const upcoming = programs.filter((p) => p.date >= today);
+  const past = programs.filter((p) => p.date < today);
+
+  if (loading) return <p className="text-text-muted">Loading...</p>;
 
   return (
     <div>
@@ -110,38 +132,100 @@ export default function AdminMassProgramsPage() {
         </form>
       )}
 
-      <div className="space-y-2">
-        {programs.map((prog) => (
-          <div
-            key={prog.id}
-            className="flex items-center justify-between bg-surface border border-border rounded-lg p-4"
-          >
-            <div className="flex items-center gap-3">
-              <Calendar className="h-5 w-5 text-primary" />
-              <div>
-                <Link
-                  href={`/admin/mass-programs/${prog.id}`}
-                  className="font-medium text-text hover:text-primary transition-colors"
-                >
-                  {prog.date}
-                </Link>
-                {prog.title && (
-                  <p className="text-sm text-text-muted">{prog.title}</p>
-                )}
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleDelete(prog.id)}
-              className="text-xs text-text-muted hover:text-red-400 transition-colors"
-            >
-              Delete
-            </button>
+      {/* Upcoming */}
+      {upcoming.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">
+            Upcoming ({upcoming.length})
+          </h2>
+          <div className="space-y-2">
+            {upcoming.map((prog) => (
+              <ProgramRow
+                key={prog.id}
+                prog={prog}
+                onDelete={handleDelete}
+                isUpcoming
+              />
+            ))}
           </div>
-        ))}
-        {programs.length === 0 && (
-          <p className="text-text-muted text-sm">No mass programs yet</p>
-        )}
+        </div>
+      )}
+
+      {/* Past */}
+      {past.length > 0 && (
+        <div>
+          <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">
+            Past ({past.length})
+          </h2>
+          <div className="space-y-2">
+            {past.map((prog) => (
+              <ProgramRow
+                key={prog.id}
+                prog={prog}
+                onDelete={handleDelete}
+                isUpcoming={false}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {programs.length === 0 && (
+        <p className="text-text-muted text-sm">No mass programs yet</p>
+      )}
+    </div>
+  );
+}
+
+function ProgramRow({
+  prog,
+  onDelete,
+  isUpcoming,
+}: {
+  prog: MassProgram;
+  onDelete: (id: number) => void;
+  isUpcoming: boolean;
+}) {
+  return (
+    <div
+      className={`flex items-center justify-between bg-surface border rounded-lg p-4 ${
+        isUpcoming ? "border-primary/20" : "border-border"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <Calendar
+          className={`h-5 w-5 ${
+            isUpcoming ? "text-primary" : "text-text-muted"
+          }`}
+        />
+        <div>
+          <Link
+            href={`/admin/mass-programs/${prog.id}`}
+            className="font-medium text-text hover:text-primary transition-colors"
+          >
+            {formatDate(prog.date)}
+          </Link>
+          {prog.title && (
+            <p className="text-sm text-text-muted">{prog.title}</p>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <Link
+          href={`/events/${prog.date}`}
+          className="p-1 text-text-muted hover:text-primary transition-colors"
+          title="View public page"
+        >
+          <ExternalLink className="h-4 w-4" />
+        </Link>
+        <button
+          type="button"
+          onClick={() => onDelete(prog.id)}
+          className="p-1 text-text-muted hover:text-red-400 transition-colors"
+          title="Delete"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
       </div>
     </div>
   );

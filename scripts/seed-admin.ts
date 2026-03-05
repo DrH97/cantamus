@@ -30,7 +30,6 @@ async function main() {
   await db
     .insert(schema.adminUsers)
     .values({
-      id: crypto.randomUUID(),
       username,
       passwordHash,
     })

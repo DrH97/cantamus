@@ -1,9 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, MapPin, Music } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  ExternalLink,
+  FileText,
+  MapPin,
+  Music,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Section } from "@/components/ui/section";
@@ -14,23 +22,26 @@ interface Verse {
   verseNumber: number;
   verseText: string;
   isChorus: boolean;
+  language: string;
 }
 
 interface ProgramSong {
-  id: string;
+  id: number;
   massSection: string;
   sortOrder: number;
   lyricsOverride: string | null;
-  hymnId: string;
+  hymnId: number;
   hymnTitle: string;
   hymnComposer: string | null;
   hymnTradition: string | null;
   hymnLanguage: string | null;
+  hymnLink: string | null;
+  hymnScoreUrl: string | null;
   hymnVerses: Verse[];
 }
 
 interface MassProgram {
-  id: string;
+  id: number;
   date: string;
   title: string | null;
   songs: ProgramSong[];
@@ -64,6 +75,55 @@ export function MassProgramClient({
   massSectionOrder: MassSection[];
   traditionLabels: Record<string, string>;
 }) {
+  const [showScore, setShowScore] = useState<Record<string, boolean>>({});
+
+  function renderVerses(verses: Verse[]) {
+    const languages = [...new Set(verses.map((v) => v.language))];
+    const isMultiLang = languages.length > 1;
+
+    if (!isMultiLang) {
+      return verses.map((verse) => (
+        <div key={`${verse.verseNumber}-${verse.language}`}>
+          {verse.isChorus && (
+            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-1">
+              Chorus
+            </p>
+          )}
+          <p className="text-text-muted whitespace-pre-line leading-relaxed">
+            {verse.verseText}
+          </p>
+        </div>
+      ));
+    }
+
+    // Group by verse number for side-by-side display
+    const verseNumbers = [...new Set(verses.map((v) => v.verseNumber))].sort(
+      (a, b) => a - b,
+    );
+    return verseNumbers.map((num) => {
+      const matching = verses.filter((v) => v.verseNumber === num);
+      const isChorus = matching.some((v) => v.isChorus);
+      return (
+        <div key={num}>
+          {isChorus && (
+            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-1">
+              Chorus
+            </p>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            {matching.map((verse) => (
+              <div key={`${verse.verseNumber}-${verse.language}`}>
+                <p className="text-text-muted whitespace-pre-line leading-relaxed">
+                  {verse.verseText}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    });
+  }
+
   const sortedSongs = [...program.songs].sort(
     (a, b) =>
       massSectionOrder.indexOf(a.massSection as MassSection) -
@@ -124,6 +184,12 @@ export function MassProgramClient({
               ? (traditionLabels[entry.hymnTradition] ?? entry.hymnTradition)
               : null;
 
+            const scoreVisible = !!showScore[entry.id];
+            const hasScore = !!entry.hymnScoreUrl;
+            const isImage = entry.hymnScoreUrl
+              ? /\.(png|jpe?g|webp)$/i.test(entry.hymnScoreUrl)
+              : false;
+
             return (
               <motion.div
                 key={entry.id}
@@ -150,34 +216,103 @@ export function MassProgramClient({
                         </span>
                       )}
                     </div>
-                    <h3 className="text-lg font-semibold text-text">
-                      {entry.hymnTitle}
-                    </h3>
-                    {entry.hymnComposer && (
-                      <p className="text-sm text-text-muted mt-1">
-                        {entry.hymnComposer}
-                      </p>
-                    )}
-                    {entry.lyricsOverride ? (
-                      <p className="mt-4 text-text-muted whitespace-pre-line leading-relaxed">
-                        {entry.lyricsOverride}
-                      </p>
-                    ) : entry.hymnVerses.length > 0 ? (
-                      <div className="mt-4 space-y-3">
-                        {entry.hymnVerses.map((verse) => (
-                          <div key={verse.verseNumber}>
-                            {verse.isChorus && (
-                              <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-1">
-                                Chorus
-                              </p>
-                            )}
-                            <p className="text-text-muted whitespace-pre-line leading-relaxed">
-                              {verse.verseText}
-                            </p>
-                          </div>
-                        ))}
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h3 className="text-lg font-semibold text-text">
+                          {entry.hymnTitle}
+                        </h3>
+                        {entry.hymnComposer && (
+                          <p className="text-sm text-text-muted mt-1">
+                            {entry.hymnComposer}
+                          </p>
+                        )}
                       </div>
-                    ) : null}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {hasScore && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setShowScore((prev) => ({
+                                ...prev,
+                                [entry.id]: !prev[entry.id],
+                              }))
+                            }
+                            className={`p-1.5 rounded transition-colors ${
+                              scoreVisible
+                                ? "text-primary bg-primary/10"
+                                : "text-text-muted hover:text-primary"
+                            }`}
+                            title={
+                              scoreVisible ? "Show lyrics" : "Show sheet music"
+                            }
+                          >
+                            {scoreVisible ? (
+                              <Music className="h-4 w-4" />
+                            ) : (
+                              <FileText className="h-4 w-4" />
+                            )}
+                          </button>
+                        )}
+                        {entry.hymnLink && (
+                          <a
+                            href={entry.hymnLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 rounded text-text-muted hover:text-primary transition-colors"
+                            title="Listen"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Content area — cross-fade between lyrics and score */}
+                    <div className="mt-4 relative">
+                      <div
+                        className={`transition-opacity duration-300 ${
+                          scoreVisible
+                            ? "opacity-0 pointer-events-none absolute inset-0"
+                            : "opacity-100"
+                        }`}
+                      >
+                        {entry.lyricsOverride ? (
+                          <p className="text-text-muted whitespace-pre-line leading-relaxed">
+                            {entry.lyricsOverride}
+                          </p>
+                        ) : entry.hymnVerses.length > 0 ? (
+                          <div className="space-y-3">
+                            {renderVerses(entry.hymnVerses)}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div
+                        className={`transition-opacity duration-300 ${
+                          scoreVisible
+                            ? "opacity-100"
+                            : "opacity-0 pointer-events-none absolute inset-0"
+                        }`}
+                      >
+                        {hasScore && entry.hymnScoreUrl && (
+                          <div className="rounded overflow-hidden border border-border">
+                            {isImage ? (
+                              // biome-ignore lint/performance/noImgElement: dynamic user upload, dimensions unknown
+                              <img
+                                src={entry.hymnScoreUrl}
+                                alt={`Score: ${entry.hymnTitle}`}
+                                className="w-full h-auto"
+                              />
+                            ) : (
+                              <iframe
+                                src={entry.hymnScoreUrl}
+                                className="w-full h-[500px]"
+                                title={`Score: ${entry.hymnTitle}`}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
