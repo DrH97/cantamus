@@ -4,6 +4,7 @@ import {
   massSectionOrder,
   traditionLabels,
 } from "@/data/repertoire";
+import { resolveScoreUrl } from "@/lib/blob";
 import { getMassProgramWithSongs } from "@/lib/db/queries/mass-programs";
 import { MassProgramClient } from "./client";
 
@@ -19,9 +20,16 @@ export default async function MassProgramPage({
     notFound();
   }
 
+  const songsWithResolvedScores = await Promise.all(
+    program.songs.map(async (song) => ({
+      ...song,
+      hymnScoreUrl: await resolveScoreUrl(song.hymnScoreUrl),
+    })),
+  );
+
   return (
     <MassProgramClient
-      program={program}
+      program={{ ...program, songs: songsWithResolvedScores }}
       massSectionLabels={massSectionLabels}
       massSectionOrder={massSectionOrder}
       traditionLabels={traditionLabels}

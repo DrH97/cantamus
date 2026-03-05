@@ -3,6 +3,7 @@ import { mkdir, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
+import { resolveScoreUrl } from "@/lib/blob";
 import { updateHymn } from "@/lib/db/mutations/hymns";
 import { getHymnWithVerses } from "@/lib/db/queries/hymns";
 
@@ -19,7 +20,8 @@ const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 async function uploadBlob(path: string, file: File): Promise<string> {
   const { put } = await import("@vercel/blob");
   const blob = await put(path, file, {
-    access: "public",
+    access: "private",
+    addRandomSuffix: true,
     contentType: file.type,
   });
   return blob.url;
@@ -46,6 +48,10 @@ async function deleteLocal(url: string): Promise<void> {
   if (existsSync(filepath)) {
     await unlink(filepath);
   }
+}
+
+function isLocalUrl(url: string): boolean {
+  return url.startsWith("/scores/");
 }
 
 export async function POST(
@@ -87,10 +93,9 @@ export async function POST(
     return NextResponse.json({ error: "Hymn not found" }, { status: 404 });
   }
 
-  // Delete old file
   if (hymn.scoreUrl) {
     try {
-      if (hymn.scoreUrl.startsWith("/scores/")) {
+      if (isLocalUrl(hymn.scoreUrl)) {
         await deleteLocal(hymn.scoreUrl);
       } else {
         await deleteBlob(hymn.scoreUrl);
@@ -109,7 +114,8 @@ export async function POST(
 
   await updateHymn(hymnId, { scoreUrl });
 
-  return NextResponse.json({ scoreUrl });
+  const displayUrl = await resolveScoreUrl(scoreUrl);
+  return NextResponse.json({ scoreUrl: displayUrl });
 }
 
 export async function DELETE(
@@ -132,7 +138,7 @@ export async function DELETE(
 
   if (hymn.scoreUrl) {
     try {
-      if (hymn.scoreUrl.startsWith("/scores/")) {
+      if (isLocalUrl(hymn.scoreUrl)) {
         await deleteLocal(hymn.scoreUrl);
       } else {
         await deleteBlob(hymn.scoreUrl);

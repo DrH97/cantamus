@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
+import { resolveScoreUrl } from "@/lib/blob";
 import { deleteHymn, updateHymn } from "@/lib/db/mutations/hymns";
 import { getHymnWithVerses } from "@/lib/db/queries/hymns";
 
@@ -18,7 +19,10 @@ export async function GET(
   if (!hymn) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
-  return NextResponse.json(hymn);
+  return NextResponse.json({
+    ...hymn,
+    scoreUrl: await resolveScoreUrl(hymn.scoreUrl),
+  });
 }
 
 export async function PUT(
