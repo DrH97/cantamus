@@ -1,4 +1,6 @@
-import { del, put } from "@vercel/blob";
+import { existsSync } from "node:fs";
+import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { updateHymn } from "@/lib/db/mutations/hymns";
@@ -11,6 +13,40 @@ const ALLOWED_TYPES = new Set([
   "image/webp",
 ]);
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+
+const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
+
+async function uploadBlob(path: string, file: File): Promise<string> {
+  const { put } = await import("@vercel/blob");
+  const blob = await put(path, file, {
+    access: "public",
+    contentType: file.type,
+  });
+  return blob.url;
+}
+
+async function deleteBlob(url: string): Promise<void> {
+  const { del } = await import("@vercel/blob");
+  await del(url);
+}
+
+const SCORES_DIR = join(process.cwd(), "public", "scores");
+
+async function uploadLocal(filename: string, file: File): Promise<string> {
+  if (!existsSync(SCORES_DIR)) {
+    await mkdir(SCORES_DIR, { recursive: true });
+  }
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await writeFile(join(SCORES_DIR, filename), buffer);
+  return `/scores/${filename}`;
+}
+
+async function deleteLocal(url: string): Promise<void> {
+  const filepath = join(process.cwd(), "public", url);
+  if (existsSync(filepath)) {
+    await unlink(filepath);
+  }
+}
 
 export async function POST(
   request: Request,
@@ -51,24 +87,29 @@ export async function POST(
     return NextResponse.json({ error: "Hymn not found" }, { status: 404 });
   }
 
-  // Delete old blob if it exists
+  // Delete old file
   if (hymn.scoreUrl) {
     try {
-      await del(hymn.scoreUrl);
+      if (hymn.scoreUrl.startsWith("/scores/")) {
+        await deleteLocal(hymn.scoreUrl);
+      } else {
+        await deleteBlob(hymn.scoreUrl);
+      }
     } catch {
-      // Old URL might not be a blob URL, ignore
+      // Ignore cleanup errors
     }
   }
 
   const ext = file.name.split(".").pop() ?? "bin";
-  const blob = await put(`scores/${hymnId}-${Date.now()}.${ext}`, file, {
-    access: "public",
-    contentType: file.type,
-  });
+  const filename = `${hymnId}-${Date.now()}.${ext}`;
 
-  await updateHymn(hymnId, { scoreUrl: blob.url });
+  const scoreUrl = useBlob
+    ? await uploadBlob(`scores/${filename}`, file)
+    : await uploadLocal(filename, file);
 
-  return NextResponse.json({ scoreUrl: blob.url });
+  await updateHymn(hymnId, { scoreUrl });
+
+  return NextResponse.json({ scoreUrl });
 }
 
 export async function DELETE(
@@ -91,9 +132,13 @@ export async function DELETE(
 
   if (hymn.scoreUrl) {
     try {
-      await del(hymn.scoreUrl);
+      if (hymn.scoreUrl.startsWith("/scores/")) {
+        await deleteLocal(hymn.scoreUrl);
+      } else {
+        await deleteBlob(hymn.scoreUrl);
+      }
     } catch {
-      // Ignore if not a blob URL
+      // Ignore cleanup errors
     }
   }
 

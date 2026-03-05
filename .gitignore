@@ -51,3 +51,6 @@ next-env.d.ts
 data/*.db
 data/*.db-journal
 data/*.db-wal
+
+# Local score uploads
+public/scores/
