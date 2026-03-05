@@ -21,7 +21,7 @@ export async function GET(
   }
   return NextResponse.json({
     ...hymn,
-    scoreUrl: await resolveScoreUrl(hymn.scoreUrl),
+    scoreUrl: resolveScoreUrl(hymn.scoreUrl),
   });
 }
 

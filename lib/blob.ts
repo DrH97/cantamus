@@ -1,17 +1,16 @@
 /**
  * Resolve a scoreUrl for client display.
  * Local URLs (/scores/...) pass through unchanged.
- * Vercel Blob URLs get a temporary signed download URL.
+ * Vercel Blob URLs get rewritten to the proxy route /api/scores?pathname=...
  */
-export async function resolveScoreUrl(
-  url: string | null,
-): Promise<string | null> {
+export function resolveScoreUrl(url: string | null): string | null {
   if (!url) return null;
   if (url.startsWith("/")) return url;
 
+  // Private blob URL — rewrite to our streaming proxy
   try {
-    const { getDownloadUrl } = await import("@vercel/blob");
-    return await getDownloadUrl(url);
+    const blobUrl = new URL(url);
+    return `/api/scores?pathname=${encodeURIComponent(blobUrl.pathname.slice(1))}`;
   } catch {
     return url;
   }

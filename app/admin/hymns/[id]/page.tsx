@@ -780,7 +780,7 @@ function ScoreDisplay({
   url: string;
   onReplace: (file: File) => void;
 }) {
-  const isPdf = /\.pdf$/i.test(url);
+  const isPdf = /\.pdf/i.test(url);
   return (
     <div>
       {isPdf ? (

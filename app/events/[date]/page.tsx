@@ -20,12 +20,10 @@ export default async function MassProgramPage({
     notFound();
   }
 
-  const songsWithResolvedScores = await Promise.all(
-    program.songs.map(async (song) => ({
-      ...song,
-      hymnScoreUrl: await resolveScoreUrl(song.hymnScoreUrl),
-    })),
-  );
+  const songsWithResolvedScores = program.songs.map((song) => ({
+    ...song,
+    hymnScoreUrl: resolveScoreUrl(song.hymnScoreUrl),
+  }));
 
   return (
     <MassProgramClient

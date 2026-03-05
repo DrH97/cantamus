@@ -114,8 +114,7 @@ export async function POST(
 
   await updateHymn(hymnId, { scoreUrl });
 
-  const displayUrl = await resolveScoreUrl(scoreUrl);
-  return NextResponse.json({ scoreUrl: displayUrl });
+  return NextResponse.json({ scoreUrl: resolveScoreUrl(scoreUrl) });
 }
 
 export async function DELETE(

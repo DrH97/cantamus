@@ -187,7 +187,7 @@ export function MassProgramClient({
             const scoreVisible = !!showScore[entry.id];
             const hasScore = !!entry.hymnScoreUrl;
             const isImage = entry.hymnScoreUrl
-              ? /\.(png|jpe?g|webp)$/i.test(entry.hymnScoreUrl)
+              ? /\.(png|jpe?g|webp)/i.test(entry.hymnScoreUrl)
               : false;
 
             return (
