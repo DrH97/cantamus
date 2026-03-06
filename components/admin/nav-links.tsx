@@ -1,12 +1,13 @@
 "use client";
 
-import { Calendar, Heart, LayoutDashboard, Music } from "lucide-react";
+import { Calendar, Heart, LayoutDashboard, Mic, Music } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/hymns", label: "Hymns", icon: Music, exact: false },
+  { href: "/admin/artists", label: "Artists", icon: Mic, exact: false },
   {
     href: "/admin/mass-programs",
     label: "Mass Programs",

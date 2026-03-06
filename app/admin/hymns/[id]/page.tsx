@@ -3,8 +3,12 @@
 import {
   ArrowLeft,
   Check,
+  ChevronDown,
+  ChevronUp,
+  Copy,
   ExternalLink,
   FileText,
+  GripVertical,
   Pencil,
   Plus,
   Save,
@@ -14,7 +18,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { use, useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/admin/toast";
 
 interface HymnDetail {
@@ -50,6 +54,10 @@ export default function AdminHymnDetailPage({
   const [editForm, setEditForm] = useState<Partial<HymnDetail>>({});
   const [saving, setSaving] = useState(false);
   const [newTag, setNewTag] = useState("");
+  const [allTags, setAllTags] = useState<{ tag: string; count: number }[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
+  const tagInputRef = useRef<HTMLInputElement>(null);
 
   // Verse editing
   const [editingVerseId, setEditingVerseId] = useState<number | null>(null);
@@ -67,6 +75,14 @@ export default function AdminHymnDetailPage({
     language: "en",
   });
 
+  // Verse reorder + collapse
+  const [collapsedVerses, setCollapsedVerses] = useState<Set<number>>(
+    new Set(),
+  );
+  const [allCollapsed, setAllCollapsed] = useState(false);
+  const [draggedVerseId, setDraggedVerseId] = useState<number | null>(null);
+  const [dragOverVerseId, setDragOverVerseId] = useState<number | null>(null);
+
   // Score upload
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -81,6 +97,12 @@ export default function AdminHymnDetailPage({
   useEffect(() => {
     fetchHymn();
   }, [fetchHymn]);
+
+  useEffect(() => {
+    fetch("/api/admin/tags")
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setAllTags);
+  }, []);
 
   function startEditing() {
     if (!hymn) return;
@@ -124,9 +146,10 @@ export default function AdminHymnDetailPage({
     }
   }
 
-  async function addTag() {
-    const tag = newTag.trim().toLowerCase();
+  async function addTag(tagName?: string) {
+    const tag = (tagName ?? newTag).trim().toLowerCase();
     if (!tag) return;
+    if (hymn?.tags.some((t) => t.tag === tag)) return;
     const res = await fetch(`/api/admin/hymns/${id}/tags`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -134,7 +157,12 @@ export default function AdminHymnDetailPage({
     });
     if (res.ok) {
       setNewTag("");
+      setShowSuggestions(false);
+      setSelectedSuggestion(-1);
       fetchHymn();
+      fetch("/api/admin/tags")
+        .then((r) => (r.ok ? r.json() : []))
+        .then(setAllTags);
       toast("Tag added");
     }
   }
@@ -149,6 +177,19 @@ export default function AdminHymnDetailPage({
       toast("Tag removed");
     }
   }
+
+  const hymnTagNames = hymn?.tags.map((t) => t.tag) ?? [];
+  const filteredSuggestions = allTags
+    .filter(
+      (t) =>
+        !hymnTagNames.includes(t.tag) &&
+        t.tag.includes(newTag.trim().toLowerCase()),
+    )
+    .sort((a, b) => a.tag.localeCompare(b.tag))
+    .slice(0, 8);
+  const unusedTags = allTags
+    .filter((t) => !hymnTagNames.includes(t.tag))
+    .sort((a, b) => a.tag.localeCompare(b.tag));
 
   async function saveVerse() {
     if (editingVerseId === null) return;
@@ -198,6 +239,87 @@ export default function AdminHymnDetailPage({
     } else {
       toast("Failed to add verse", "error");
     }
+  }
+
+  async function duplicateVerse(verse: HymnDetail["verses"][number]) {
+    const maxNum = Math.max(
+      0,
+      ...(hymn?.verses.map((v) => v.verseNumber) ?? []),
+    );
+    const res = await fetch(`/api/admin/hymns/${id}/verses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        verseNumber: maxNum + 1,
+        verseText: verse.verseText,
+        isChorus: verse.isChorus,
+        language: verse.language,
+      }),
+    });
+    if (res.ok) {
+      fetchHymn();
+      toast("Verse duplicated");
+    } else {
+      toast("Failed to duplicate verse", "error");
+    }
+  }
+
+  async function handleVerseDrop(targetVerseId: number) {
+    if (!hymn || draggedVerseId === null || draggedVerseId === targetVerseId)
+      return;
+    const verses = [...hymn.verses];
+    const dragIdx = verses.findIndex((v) => v.id === draggedVerseId);
+    const dropIdx = verses.findIndex((v) => v.id === targetVerseId);
+    if (dragIdx === -1 || dropIdx === -1) return;
+
+    // Reorder: move dragged to drop position
+    const [moved] = verses.splice(dragIdx, 1);
+    verses.splice(dropIdx, 0, moved);
+
+    // Reassign verse numbers sequentially (chorus keeps number 0)
+    const updates: Promise<Response>[] = [];
+    for (let i = 0; i < verses.length; i++) {
+      const newNum = verses[i].isChorus ? 0 : i + 1;
+      if (verses[i].verseNumber !== newNum) {
+        updates.push(
+          fetch(`/api/admin/hymns/${id}/verses`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: verses[i].id, verseNumber: newNum }),
+          }),
+        );
+      }
+    }
+    if (updates.length > 0) {
+      await Promise.all(updates);
+      fetchHymn();
+      toast("Verses reordered");
+    }
+    setDraggedVerseId(null);
+    setDragOverVerseId(null);
+  }
+
+  function toggleCollapseAll() {
+    if (!hymn) return;
+    if (allCollapsed) {
+      setCollapsedVerses(new Set());
+      setAllCollapsed(false);
+    } else {
+      setCollapsedVerses(new Set(hymn.verses.map((v) => v.id)));
+      setAllCollapsed(true);
+    }
+  }
+
+  function toggleCollapseVerse(verseId: number) {
+    setCollapsedVerses((prev) => {
+      const next = new Set(prev);
+      if (next.has(verseId)) {
+        next.delete(verseId);
+      } else {
+        next.add(verseId);
+      }
+      return next;
+    });
   }
 
   async function uploadScore(file: File) {
@@ -257,7 +379,7 @@ export default function AdminHymnDetailPage({
   if (!hymn) return <p className="text-text-muted">Hymn not found</p>;
 
   return (
-    <div className="max-w-3xl">
+    <div className="max-w-5xl">
       <div className="flex items-center justify-between mb-4">
         <Link
           href="/admin/hymns"
@@ -429,29 +551,103 @@ export default function AdminHymnDetailPage({
             <span className="text-xs text-text-muted">No tags</span>
           )}
         </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addTag();
-              }
-            }}
-            placeholder="Add tag..."
-            className="flex-1 px-3 py-1.5 bg-background border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-          />
-          <button
-            type="button"
-            onClick={addTag}
-            disabled={!newTag.trim()}
-            className="px-3 py-1.5 bg-primary text-obsidian font-semibold rounded text-sm hover:bg-primary-dark transition-colors disabled:opacity-50"
-          >
-            Add
-          </button>
+        <div className="relative">
+          <div className="flex gap-2">
+            <input
+              ref={tagInputRef}
+              type="text"
+              value={newTag}
+              onChange={(e) => {
+                setNewTag(e.target.value);
+                setShowSuggestions(true);
+                setSelectedSuggestion(-1);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => {
+                // Delay to allow click on suggestion
+                setTimeout(() => setShowSuggestions(false), 150);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  setSelectedSuggestion((prev) =>
+                    Math.min(prev + 1, filteredSuggestions.length - 1),
+                  );
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  setSelectedSuggestion((prev) => Math.max(prev - 1, -1));
+                } else if (e.key === "Enter") {
+                  e.preventDefault();
+                  if (
+                    selectedSuggestion >= 0 &&
+                    filteredSuggestions[selectedSuggestion]
+                  ) {
+                    addTag(filteredSuggestions[selectedSuggestion].tag);
+                  } else {
+                    addTag();
+                  }
+                } else if (e.key === "Escape") {
+                  setShowSuggestions(false);
+                  setSelectedSuggestion(-1);
+                }
+              }}
+              placeholder="Add tag..."
+              className="flex-1 px-3 py-1.5 bg-background border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+            />
+            <button
+              type="button"
+              onClick={() => addTag()}
+              disabled={!newTag.trim()}
+              className="px-3 py-1.5 bg-primary text-obsidian font-semibold rounded text-sm hover:bg-primary-dark transition-colors disabled:opacity-50"
+            >
+              Add
+            </button>
+          </div>
+
+          {/* Autocomplete dropdown */}
+          {showSuggestions &&
+            newTag.trim() &&
+            filteredSuggestions.length > 0 && (
+              <div className="absolute z-10 left-0 right-16 mt-1 bg-surface border border-border rounded-lg shadow-lg overflow-hidden">
+                {filteredSuggestions.map((t, i) => (
+                  <button
+                    key={t.tag}
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => addTag(t.tag)}
+                    className={`w-full flex items-center justify-between px-3 py-1.5 text-sm text-left transition-colors ${
+                      i === selectedSuggestion
+                        ? "bg-primary/10 text-primary"
+                        : "text-text hover:bg-surface-elevated"
+                    }`}
+                  >
+                    <span>{t.tag}</span>
+                    <span className="text-xs text-text-muted">{t.count}</span>
+                  </button>
+                ))}
+              </div>
+            )}
         </div>
+
+        {/* Quick-add: show unused existing tags */}
+        {unusedTags.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-border/50">
+            <p className="text-xs text-text-muted mb-2">Quick add</p>
+            <div className="flex flex-wrap gap-1.5">
+              {unusedTags.map((t) => (
+                <button
+                  key={t.tag}
+                  type="button"
+                  onClick={() => addTag(t.tag)}
+                  className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded border border-border text-text-muted hover:border-primary hover:text-primary transition-colors"
+                >
+                  <Plus className="h-3 w-3" />
+                  {t.tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Score Section */}
@@ -491,26 +687,42 @@ export default function AdminHymnDetailPage({
           <h2 className="text-sm font-semibold text-text">
             Verses ({hymn.verses.length})
           </h2>
-          <button
-            type="button"
-            onClick={() => {
-              const maxNum = Math.max(
-                0,
-                ...hymn.verses.map((v) => v.verseNumber),
-              );
-              setNewVerseForm({
-                verseNumber: maxNum + 1,
-                verseText: "",
-                isChorus: false,
-                language: "en",
-              });
-              setAddingVerse(true);
-            }}
-            className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-primary transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Add Verse
-          </button>
+          <div className="flex items-center gap-2">
+            {hymn.verses.length > 1 && (
+              <button
+                type="button"
+                onClick={toggleCollapseAll}
+                className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-text transition-colors"
+              >
+                {allCollapsed ? (
+                  <ChevronDown className="h-3.5 w-3.5" />
+                ) : (
+                  <ChevronUp className="h-3.5 w-3.5" />
+                )}
+                {allCollapsed ? "Expand all" : "Collapse all"}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                const maxNum = Math.max(
+                  0,
+                  ...hymn.verses.map((v) => v.verseNumber),
+                );
+                setNewVerseForm({
+                  verseNumber: maxNum + 1,
+                  verseText: "",
+                  isChorus: false,
+                  language: "en",
+                });
+                setAddingVerse(true);
+              }}
+              className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-primary transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              Add Verse
+            </button>
+          </div>
         </div>
 
         {addingVerse && (
@@ -600,136 +812,36 @@ export default function AdminHymnDetailPage({
         {hymn.verses.length === 0 && !addingVerse ? (
           <p className="text-text-muted text-sm">No verses recorded</p>
         ) : (
-          <div className="space-y-3">
-            {hymn.verses.map((verse) => (
-              <div
-                key={verse.id}
-                className="border border-border rounded-lg p-4"
-              >
-                {editingVerseId === verse.id ? (
-                  <div>
-                    <div className="grid grid-cols-3 gap-3 mb-3">
-                      <label className="block">
-                        <span className="block text-xs text-text-muted mb-1">
-                          Number
-                        </span>
-                        <input
-                          type="number"
-                          value={editVerseForm.verseNumber}
-                          onChange={(e) =>
-                            setEditVerseForm({
-                              ...editVerseForm,
-                              verseNumber: Number(e.target.value),
-                            })
-                          }
-                          className="w-full px-3 py-1.5 bg-background border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                        />
-                      </label>
-                      <label className="block">
-                        <span className="block text-xs text-text-muted mb-1">
-                          Language
-                        </span>
-                        <input
-                          type="text"
-                          value={editVerseForm.language}
-                          onChange={(e) =>
-                            setEditVerseForm({
-                              ...editVerseForm,
-                              language: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-1.5 bg-background border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                        />
-                      </label>
-                      <div className="flex items-end">
-                        <label className="flex items-center gap-2 text-sm text-text-muted">
-                          <input
-                            type="checkbox"
-                            checked={editVerseForm.isChorus}
-                            onChange={(e) =>
-                              setEditVerseForm({
-                                ...editVerseForm,
-                                isChorus: e.target.checked,
-                              })
-                            }
-                            className="rounded"
-                          />
-                          Chorus
-                        </label>
-                      </div>
-                    </div>
-                    <textarea
-                      value={editVerseForm.verseText}
-                      onChange={(e) =>
-                        setEditVerseForm({
-                          ...editVerseForm,
-                          verseText: e.target.value,
-                        })
-                      }
-                      rows={4}
-                      className="w-full px-3 py-2 bg-background border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 mb-3"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={saveVerse}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-obsidian font-semibold rounded text-sm hover:bg-primary-dark transition-colors"
-                      >
-                        <Check className="h-3.5 w-3.5" />
-                        Save
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setEditingVerseId(null)}
-                        className="px-3 py-1.5 border border-border text-text-muted rounded text-sm hover:text-text transition-colors"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium text-text-muted">
-                        {verse.isChorus
-                          ? "Chorus"
-                          : `Verse ${verse.verseNumber}`}
-                      </span>
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingVerseId(verse.id);
-                            setEditVerseForm({
-                              verseNumber: verse.verseNumber,
-                              verseText: verse.verseText,
-                              isChorus: verse.isChorus,
-                              language: verse.language,
-                            });
-                          }}
-                          className="p-1 text-text-muted hover:text-primary transition-colors"
-                          title="Edit verse"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => deleteVerse(verse.id)}
-                          className="p-1 text-text-muted hover:text-red-400 transition-colors"
-                          title="Delete verse"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-text text-sm whitespace-pre-line leading-relaxed">
-                      {verse.verseText}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <VerseGroups
+            verses={hymn.verses}
+            editingVerseId={editingVerseId}
+            editVerseForm={editVerseForm}
+            setEditVerseForm={setEditVerseForm}
+            collapsedGroups={collapsedVerses}
+            toggleCollapseGroup={toggleCollapseVerse}
+            onSaveVerse={saveVerse}
+            onCancelEdit={() => setEditingVerseId(null)}
+            onStartEdit={(verse) => {
+              setEditingVerseId(verse.id);
+              setEditVerseForm({
+                verseNumber: verse.verseNumber,
+                verseText: verse.verseText,
+                isChorus: verse.isChorus,
+                language: verse.language,
+              });
+            }}
+            onDeleteVerse={deleteVerse}
+            onDuplicateVerse={duplicateVerse}
+            draggedVerseId={draggedVerseId}
+            dragOverVerseId={dragOverVerseId}
+            onDragStart={setDraggedVerseId}
+            onDragOver={setDragOverVerseId}
+            onDrop={handleVerseDrop}
+            onDragEnd={() => {
+              setDraggedVerseId(null);
+              setDragOverVerseId(null);
+            }}
+          />
         )}
       </div>
     </div>
@@ -770,6 +882,321 @@ function EditField({
         className="w-full px-3 py-2 bg-background border border-border rounded text-text text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
       />
     </label>
+  );
+}
+
+type Verse = {
+  id: number;
+  verseNumber: number;
+  verseText: string;
+  isChorus: boolean;
+  language: string;
+};
+
+function VerseGroups({
+  verses,
+  editingVerseId,
+  editVerseForm,
+  setEditVerseForm,
+  collapsedGroups,
+  toggleCollapseGroup,
+  onSaveVerse,
+  onCancelEdit,
+  onStartEdit,
+  onDeleteVerse,
+  onDuplicateVerse,
+  draggedVerseId,
+  dragOverVerseId,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
+}: {
+  verses: Verse[];
+  editingVerseId: number | null;
+  editVerseForm: {
+    verseNumber: number;
+    verseText: string;
+    isChorus: boolean;
+    language: string;
+  };
+  setEditVerseForm: (f: {
+    verseNumber: number;
+    verseText: string;
+    isChorus: boolean;
+    language: string;
+  }) => void;
+  collapsedGroups: Set<number>;
+  toggleCollapseGroup: (verseNumber: number) => void;
+  onSaveVerse: () => void;
+  onCancelEdit: () => void;
+  onStartEdit: (verse: Verse) => void;
+  onDeleteVerse: (id: number) => void;
+  onDuplicateVerse: (verse: Verse) => void;
+  draggedVerseId: number | null;
+  dragOverVerseId: number | null;
+  onDragStart: (id: number) => void;
+  onDragOver: (id: number) => void;
+  onDrop: (id: number) => void;
+  onDragEnd: () => void;
+}) {
+  // Group verses by verseNumber + isChorus key
+  const groups: { key: number; isChorus: boolean; verses: Verse[] }[] = [];
+  const seen = new Map<string, number>();
+  for (const v of verses) {
+    const gk = `${v.verseNumber}-${v.isChorus}`;
+    const idx = seen.get(gk);
+    if (idx !== undefined) {
+      groups[idx].verses.push(v);
+    } else {
+      seen.set(gk, groups.length);
+      groups.push({ key: v.verseNumber, isChorus: v.isChorus, verses: [v] });
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      {groups.map((group) => {
+        const firstVerse = group.verses[0];
+        const isMultiLang = group.verses.length > 1;
+        // Use first verse id as the group collapse key
+        const isCollapsed = collapsedGroups.has(firstVerse.id);
+        const isDragTarget =
+          group.verses.some((v) => v.id === dragOverVerseId) &&
+          !group.verses.some((v) => v.id === draggedVerseId);
+        const isDragged = group.verses.some((v) => v.id === draggedVerseId);
+
+        return (
+          // biome-ignore lint/a11y/noStaticElementInteractions: drag-and-drop reorder target
+          <div
+            key={`${group.key}-${group.isChorus}`}
+            draggable={!group.verses.some((v) => v.id === editingVerseId)}
+            onDragStart={(e) => {
+              onDragStart(firstVerse.id);
+              e.dataTransfer.effectAllowed = "move";
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+              onDragOver(firstVerse.id);
+            }}
+            onDragLeave={() => {
+              if (dragOverVerseId === firstVerse.id) onDragOver(-1);
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              onDrop(firstVerse.id);
+            }}
+            onDragEnd={onDragEnd}
+            className={`border rounded-lg transition-colors ${
+              isDragged
+                ? "opacity-50 border-border"
+                : isDragTarget
+                  ? "border-primary bg-primary/5"
+                  : "border-border"
+            }`}
+          >
+            {/* Group header */}
+            <div className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-2">
+                <GripVertical className="h-4 w-4 text-text-muted/50 cursor-grab active:cursor-grabbing flex-shrink-0" />
+                <button
+                  type="button"
+                  onClick={() => toggleCollapseGroup(firstVerse.id)}
+                  className="flex items-center gap-1.5 text-xs font-medium text-text-muted hover:text-text transition-colors"
+                >
+                  {isCollapsed ? (
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  ) : (
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  )}
+                  {group.isChorus ? "Chorus" : `Verse ${group.key}`}
+                </button>
+                {group.verses.map((v) => (
+                  <span
+                    key={v.language}
+                    className="text-[10px] uppercase tracking-wider text-text-muted/60 bg-surface-elevated px-1.5 py-0.5 rounded"
+                  >
+                    {v.language}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Verse content */}
+            {!isCollapsed && (
+              <div
+                className={`px-4 pb-4 ${isMultiLang ? "grid gap-4" : ""}`}
+                style={
+                  isMultiLang
+                    ? {
+                        gridTemplateColumns: `repeat(${group.verses.length}, 1fr)`,
+                      }
+                    : undefined
+                }
+              >
+                {group.verses.map((verse) => (
+                  <div key={verse.id}>
+                    {editingVerseId === verse.id ? (
+                      <div className="bg-background border border-primary/30 rounded-lg p-3">
+                        <div className="grid grid-cols-3 gap-3 mb-3">
+                          <label className="block">
+                            <span className="block text-xs text-text-muted mb-1">
+                              Number
+                            </span>
+                            <input
+                              type="number"
+                              value={editVerseForm.verseNumber}
+                              onChange={(e) =>
+                                setEditVerseForm({
+                                  ...editVerseForm,
+                                  verseNumber: Number(e.target.value),
+                                })
+                              }
+                              className="w-full px-3 py-1.5 bg-surface border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                            />
+                          </label>
+                          <label className="block">
+                            <span className="block text-xs text-text-muted mb-1">
+                              Language
+                            </span>
+                            <input
+                              type="text"
+                              value={editVerseForm.language}
+                              onChange={(e) =>
+                                setEditVerseForm({
+                                  ...editVerseForm,
+                                  language: e.target.value,
+                                })
+                              }
+                              className="w-full px-3 py-1.5 bg-surface border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                            />
+                          </label>
+                          <div className="flex items-end">
+                            <label className="flex items-center gap-2 text-sm text-text-muted">
+                              <input
+                                type="checkbox"
+                                checked={editVerseForm.isChorus}
+                                onChange={(e) =>
+                                  setEditVerseForm({
+                                    ...editVerseForm,
+                                    isChorus: e.target.checked,
+                                  })
+                                }
+                                className="rounded"
+                              />
+                              Chorus
+                            </label>
+                          </div>
+                        </div>
+                        <textarea
+                          value={editVerseForm.verseText}
+                          onChange={(e) =>
+                            setEditVerseForm({
+                              ...editVerseForm,
+                              verseText: e.target.value,
+                            })
+                          }
+                          rows={Math.max(
+                            4,
+                            editVerseForm.verseText.split("\n").length + 1,
+                          )}
+                          className="w-full px-3 py-2 bg-surface border border-border rounded text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 mb-3"
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={onSaveVerse}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-obsidian font-semibold rounded text-sm hover:bg-primary-dark transition-colors"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={onCancelEdit}
+                            className="px-3 py-1.5 border border-border text-text-muted rounded text-sm hover:text-text transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="group/verse">
+                        {isMultiLang && (
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[10px] uppercase tracking-wider text-text-muted/60 font-medium">
+                              {verse.language}
+                            </span>
+                            <div className="flex items-center gap-0.5 opacity-0 group-hover/verse:opacity-100 transition-opacity">
+                              <button
+                                type="button"
+                                onClick={() => onDuplicateVerse(verse)}
+                                className="p-1 text-text-muted hover:text-primary transition-colors"
+                                title="Duplicate verse"
+                              >
+                                <Copy className="h-3 w-3" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => onStartEdit(verse)}
+                                className="p-1 text-text-muted hover:text-primary transition-colors"
+                                title="Edit verse"
+                              >
+                                <Pencil className="h-3 w-3" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => onDeleteVerse(verse.id)}
+                                className="p-1 text-text-muted hover:text-red-400 transition-colors"
+                                title="Delete verse"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        <p className="text-text text-sm whitespace-pre-line leading-relaxed">
+                          {verse.verseText}
+                        </p>
+                        {!isMultiLang && (
+                          <div className="flex items-center gap-0.5 mt-2 opacity-0 group-hover/verse:opacity-100 transition-opacity">
+                            <button
+                              type="button"
+                              onClick={() => onDuplicateVerse(verse)}
+                              className="p-1 text-text-muted hover:text-primary transition-colors"
+                              title="Duplicate verse"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => onStartEdit(verse)}
+                              className="p-1 text-text-muted hover:text-primary transition-colors"
+                              title="Edit verse"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => onDeleteVerse(verse.id)}
+                              className="p-1 text-text-muted hover:text-red-400 transition-colors"
+                              title="Delete verse"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
+import { getArtistCount } from "@/lib/db/queries/artists";
 import {
   getFavouriteHymnCount,
   getHymnCount,
@@ -27,6 +28,7 @@ export async function GET() {
     favouriteCount,
     weddingCount,
     programCount,
+    artistCount,
     hymnsWithoutVerses,
     hymnsWithoutTags,
     recentHymns,
@@ -38,6 +40,7 @@ export async function GET() {
     getFavouriteHymnCount(),
     getWeddingHymnCount(),
     getMassProgramCount(),
+    getArtistCount(),
     getHymnsWithoutVersesCount(),
     getHymnsWithoutTagsCount(),
     getRecentHymns(8),
@@ -52,6 +55,7 @@ export async function GET() {
       favouriteCount,
       weddingCount,
       programCount,
+      artistCount,
       hymnsWithoutVerses,
       hymnsWithoutTags,
     },

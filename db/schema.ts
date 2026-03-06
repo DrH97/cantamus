@@ -101,6 +101,32 @@ export const massProgramSongs = sqliteTable(
   ],
 );
 
+export const artists = sqliteTable(
+  "artists",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
+    voicePart: text("voice_part"),
+    instrument: text("instrument"),
+    isConductor: integer("is_conductor", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    isCORMember: integer("is_cor_member", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    photoUrl: text("photo_url"),
+    bio: text("bio"),
+    website: text("website"),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (table) => [index("idx_artists_name").on(table.name)],
+);
+
 export const adminUsers = sqliteTable("admin_users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   username: text("username").notNull().unique(),

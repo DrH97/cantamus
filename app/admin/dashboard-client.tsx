@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   Calendar,
   Heart,
+  Mic,
   Music,
   Plus,
   Star,
@@ -18,6 +19,7 @@ interface DashboardData {
     favouriteCount: number;
     weddingCount: number;
     programCount: number;
+    artistCount: number;
     hymnsWithoutVerses: number;
     hymnsWithoutTags: number;
   };
@@ -119,6 +121,12 @@ export function DashboardClient() {
           icon={<Heart className="h-5 w-5" />}
           color="text-pink-400"
           href="/admin/wedding"
+        />
+        <StatCard
+          label="Artists"
+          value={stats.artistCount}
+          icon={<Mic className="h-5 w-5" />}
+          href="/admin/artists"
         />
         <StatCard
           label="Mass Programs"
