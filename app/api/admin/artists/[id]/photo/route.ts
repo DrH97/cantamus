@@ -3,6 +3,7 @@ import { mkdir, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
+import { resolvePhotoUrl } from "@/lib/blob";
 import { updateArtist } from "@/lib/db/mutations/artists";
 import { getArtist } from "@/lib/db/queries/artists";
 
@@ -14,7 +15,7 @@ const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 async function uploadBlob(path: string, file: File): Promise<string> {
   const { put } = await import("@vercel/blob");
   const blob = await put(path, file, {
-    access: "public",
+    access: "private",
     addRandomSuffix: true,
     contentType: file.type,
   });
@@ -108,7 +109,7 @@ export async function POST(
 
   await updateArtist(artistId, { photoUrl });
 
-  return NextResponse.json({ photoUrl });
+  return NextResponse.json({ photoUrl: resolvePhotoUrl(photoUrl) });
 }
 
 export async function DELETE(

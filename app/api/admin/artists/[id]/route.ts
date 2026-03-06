@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
+import { resolvePhotoUrl } from "@/lib/blob";
 import { deleteArtist, updateArtist } from "@/lib/db/mutations/artists";
 import { getArtist } from "@/lib/db/queries/artists";
 
@@ -18,7 +19,10 @@ export async function GET(
   if (!artist) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
-  return NextResponse.json(artist);
+  return NextResponse.json({
+    ...artist,
+    photoUrl: resolvePhotoUrl(artist.photoUrl),
+  });
 }
 
 export async function PUT(

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
+import { resolvePhotoUrl } from "@/lib/blob";
 import {
   createArtist,
   getAllArtists,
@@ -22,7 +23,9 @@ export async function GET(request: Request) {
     ? await searchArtists(q, limit, offset)
     : await getAllArtists(limit, offset);
 
-  return NextResponse.json(artists);
+  return NextResponse.json(
+    artists.map((a) => ({ ...a, photoUrl: resolvePhotoUrl(a.photoUrl) })),
+  );
 }
 
 export async function POST(request: Request) {
