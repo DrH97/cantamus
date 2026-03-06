@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 365,
+    localPatterns: [
+      { pathname: "/api/photos/**" },
+      { pathname: "/api/scores/**" },
+      { pathname: "/**" },
+    ],
     remotePatterns: [
       {
         protocol: "https",
