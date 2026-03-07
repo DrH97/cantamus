@@ -29,7 +29,7 @@ If songs are composed by men to glorify women, then Mary still wins the lottery 
 
 ChatGPT will most likely tell you that the most glorified woman on earth at the moment is Lady Gaga, Beyonc\u00E9 or Taylor Swift; but this is because it is trained on modern data \u2026 and because the modern world knows nothing about sorrow. It shuns suffering as a way to glory. "My servant shall be raised high and greatly exalted." (Isaiah 52:13). The modern world knows nothing about the kind of exaltation that comes about as a consequence of self-abasement or the joy that emerges from sorrow\u2026 but Mary Knew. She, the *Hodegetria*, shows the way. She shows it by pointing towards Him who is The Way.`,
   date: "2025-09-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/10-sep-marys-joyful-sadness.pdf",
 };

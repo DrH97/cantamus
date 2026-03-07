@@ -31,7 +31,7 @@ All power in heaven and on earth has been given to this humblest of Kings (Matt 
 
 We were born for royalty and we are destined for it. We should live our lives like watchmen waiting for daybreak \u2013 constantly looking towards the horizon for the Return of the King.`,
   date: "2025-11-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/12-nov-return-of-the-king.pdf",
 };

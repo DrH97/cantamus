@@ -39,7 +39,7 @@ If only each of us would allow The Spirit's "*Green Finger*" to touch our dry he
 
 *Veni Sancte Spiritus!* Come Holy Spirit! Fill the hearts of your faithful, and enkindle in them the fire of your Love. Send forth your Spirit and they shall be (re)created. And you shall renew the face of the earth. Amen`,
   date: "2025-06-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/07-jun-ubi-spiritus.pdf",
 };

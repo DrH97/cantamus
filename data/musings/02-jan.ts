@@ -47,7 +47,7 @@ In every Mass, the Eternal Word enters our history, becoming flesh in the Incarn
 
 In East Africa (Kenya, Uganda and Tanzania), we had to wait until the so-called third phase of evangelization (the 19th century), for the arrival of The Word \u2013 and even then, it arrived courtesy of the Anglican Church which by then had lost much of the fullness of the Faith that subsists in the Catholic Church. This notwithstanding, part of the uniqueness of our encounter with The Word can be gleaned from the melodies and harmonies of our great liturgical texts. Our Missa Taita is a collection of Taita folk melodies compiled by various Taita musicians. Missa Fadhili is a Tanzanian Mass. Both Missa Taita and Fadhili were composed for the Eucharistic Congress of 1987 convened by Pope John Paul II himself. The common denominator between Missa Taita and Fadhili is the Swahili language. Here too, the rhythms of the words of men mingle with the Rhythm of *The Word* of God; and the beat goes on \u2026`,
   date: "2025-01-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/02-jan-the-sacred-word.pdf",
 };

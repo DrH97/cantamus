@@ -35,7 +35,7 @@ The month of October is a propitious time to dwell on these matters.
 
 -- Fulton J. Sheen, *The World's First Love: The Woman and the Atom*`,
   date: "2025-10-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/11-oct-great-cosmic-dance.pdf",
 };

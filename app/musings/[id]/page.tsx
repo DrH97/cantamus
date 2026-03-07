@@ -150,11 +150,15 @@ export default function MusingPage({
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 <time dateTime={musing.date}>
-                  {new Date(musing.date).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  {musing.category === "monthly"
+                    ? new Date(musing.date).toLocaleDateString("en-GB", {
+                        month: "long",
+                      })
+                    : new Date(musing.date).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
                 </time>
               </div>
               <div className="flex items-center gap-1">

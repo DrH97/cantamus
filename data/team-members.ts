@@ -62,7 +62,8 @@ export const teamMembers: TeamMember[] = [
     id: "frida-ombogo",
     name: "Frida Ombogo",
     voicePart: "alto",
-    roles: ["singer"],
+    roles: ["singer", "cor"],
+    isCORMember: true,
   },
   {
     id: "madeline-kanyadudi",
@@ -106,7 +107,8 @@ export const teamMembers: TeamMember[] = [
     id: "irush",
     name: "Irush",
     voicePart: "tenor",
-    roles: ["singer"],
+    roles: ["singer", "cor"],
+    isCORMember: true,
   },
   {
     id: "jm",

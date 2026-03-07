@@ -47,7 +47,7 @@ And speaking of toil, ladders and "Jacobs", there is a reason why someone who ha
 
 If-ever we manage to internalize "Jacob's Ladder" (the Mystery of the Cross), the words of Scripture shall be fulfilled in us \u2013 albeit with a modern twist: "Justice and Peace shall kiss \u2026" (See Ps. 85), *Eros* and *Agape* shall embrace. We will inherit Christ's ability to transpose *Eros* into *Agape* \u2013 and back again.`,
   date: "2025-02-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/03-feb-eros-and-agape.pdf",
 };

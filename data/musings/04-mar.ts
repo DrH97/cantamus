@@ -33,7 +33,7 @@ Pop music is not folk music. In its original sense, folk music was the musical e
 
 To quote Ratzinger one last time, "Only when one sets aside personal tastes and desires for self-expression or recognition does one gain the authentic freedom necessary to 'uncover the song that lies at the base of all things'". Music does indeed play a role in our self-renewal. It does this by uncovering the buried way to the heart; to the core of our being, where it touches the being of the Creator who lives beyond time. Whenever this is achieved, e.g. during a well-lived season of Lent, music becomes the road that leads to Jesus, *The Way* on which God reveals his salvation.`,
   date: "2025-03-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/04-mar-music-before-dawn.pdf",
 };

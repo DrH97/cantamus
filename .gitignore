@@ -54,3 +54,4 @@ data/*.db-wal
 
 # Local score uploads
 public/scores/
+public/photos

@@ -29,7 +29,7 @@ const members: {
   { name: "Bernadine", voicePart: "soprano" },
 
   // Altos
-  { name: "Frida Ombogo", voicePart: "alto" },
+  { name: "Frida Ombogo", voicePart: "alto", isCORMember: true },
   { name: "Madeline Kanyadudi", voicePart: "alto" },
   { name: "Olga", voicePart: "alto" },
   { name: "Maryann Gitonga", voicePart: "alto" },
@@ -38,7 +38,7 @@ const members: {
   { name: "Monty Njaaga", voicePart: "alto" },
 
   // Tenors
-  { name: "Irush", voicePart: "tenor" },
+  { name: "Irush", voicePart: "tenor", isCORMember: true },
   { name: "JM", voicePart: "tenor" },
   { name: "Jerome", voicePart: "tenor" },
   { name: "Ryan", voicePart: "tenor" },

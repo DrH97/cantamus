@@ -23,7 +23,7 @@ The imagery of the Good Shepherd's panpipes comes back to mind. Our faith teache
 
 It is the Good Shepherd who recapitulates in himself the melodies of both earth and heaven, creation and the Creator, work and Author, flesh and Spirit. He IS the centre of the cosmos and of history. All history is His Story.`,
   date: "2025-08-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/09-aug-disappearance-of-melody.pdf",
 };

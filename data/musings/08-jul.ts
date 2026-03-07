@@ -37,7 +37,7 @@ Legend has it that centuries later, a monastery was set up on that very holy mou
 
 Perhaps it is not a coincidence that Carmel is the first religious Marian Order of the West. Who, other than Mary, Supreme Pattern or *Archetype* of the Church and privileged channel through which heaven came down to earth in the Person of the Word, the Divine *Logos* (think *Eternal Prototypical "Algorithm"*) \u2026 can help us re-enchant our jaded and crumbling world? Her Rosaries, Scapulars and Chaplets are not charms and amulets that magically protect the superstitious. They are prayer-weapons for recreating, re-incarnating and renewing the world with the Father, through the Son and in the Spirit.`,
   date: "2025-07-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/08-jul-reenchanted.pdf",
 };

@@ -30,9 +30,16 @@ export default async function ArtistsPage() {
     voiceSections.map((vp, i) => [vp, resolvePhotos(voiceGroups[i])]),
   );
 
+  // Bobby's prescribed COR order: Bob, Frida, Sam, Irush
+  const corOrder = ["Bob Odero", "Frida Ombogo", "Sam Kariuki", "Irush"];
+  const sortedCor = resolvePhotos(corMembers).sort(
+    (a, b) =>
+      (corOrder.indexOf(a.name) >>> 0) - (corOrder.indexOf(b.name) >>> 0),
+  );
+
   return (
     <ArtistsClient
-      corMembers={resolvePhotos(corMembers)}
+      corMembers={sortedCor}
       conductors={resolvePhotos(conductors)}
       voicePartMembers={voicePartMembers}
     />

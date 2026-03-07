@@ -49,7 +49,7 @@ export default function MusingsPage() {
             </h1>
             <p className="mt-6 text-xl text-text-muted">
               A monthly series on sacred music, liturgy, and the rhythm of the
-              liturgical year by Robert Odero
+              liturgical year by The CantaMuse
             </p>
           </motion.div>
         </div>
@@ -68,22 +68,12 @@ export default function MusingsPage() {
               <Link href={`/musings/${intro.id}`} className="block">
                 <Card className="hover:shadow-lg transition-shadow group">
                   <CardContent className="p-6 md:p-8">
-                    <div className="flex items-center justify-between gap-3 mb-4">
+                    <div className="mb-4">
                       <span
                         className={`px-2 py-1 text-xs font-medium rounded ${categoryColors[intro.category]}`}
                       >
                         {categoryLabels[intro.category]}
                       </span>
-                      <div className="flex items-center gap-1 text-xs text-text-muted">
-                        <Calendar className="h-3 w-3" />
-                        <time dateTime={intro.date}>
-                          {new Date(intro.date).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })}
-                        </time>
-                      </div>
                     </div>
                     <h2 className="text-2xl md:text-3xl font-bold text-text mb-3 group-hover:text-primary transition-colors">
                       {intro.title}
@@ -133,9 +123,7 @@ export default function MusingsPage() {
                       <Calendar className="h-3 w-3" />
                       <time dateTime={musing.date}>
                         {new Date(musing.date).toLocaleDateString("en-GB", {
-                          day: "numeric",
                           month: "long",
-                          year: "numeric",
                         })}
                       </time>
                     </div>

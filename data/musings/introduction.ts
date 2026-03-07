@@ -33,7 +33,7 @@ During Lent the music he expects us to resonate with is more solemn and heavy. I
 
 As the liturgical year draws to a close, the liturgy reminds us of the glory that awaits those who walk \u2013 nay dance \u2013 in the footsteps of Jesus Christ; Priest, Prophet and King. The Solemnity of Our Lord Jesus Christ, the King of the Universe, marks the end of the liturgical cycle. It not only wistfully looks back to the glory of Our King's resurrection which we celebrate during the 50 days of Easter, it decidedly points us forward to the final glory that awaits us. The mood of the music proper to such solemnities might remind you of the soundtracks of heroic sagas and legendary films from famous contemporary music composers like Hans Zimmer and John Williams. If moods had colours, the mood for such regal and eschatological liturgical celebrations would be golden. As golden as the setting sun.`,
   date: "2024-11-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "reflection",
   pdfUrl: "/musings/introduction.pdf",
 };

@@ -33,7 +33,7 @@ Today too, we are quite tangibly experiencing the power of chaos\u2026 the boat 
 
 -- Pope Paul VI, *Credo of the People of God*`,
   date: "2025-05-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/06-may-marys-voice.pdf",
 };

@@ -41,7 +41,7 @@ Taking a cue from Mary, we too could learn to enter deeper into silence and scri
 
 -- Joseph Cardinal Ratzinger, *The Spirit of the Liturgy*`,
   date: "2024-12-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/01-dec-the-deep-silence.pdf",
 };

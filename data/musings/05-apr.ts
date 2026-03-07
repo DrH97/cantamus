@@ -27,7 +27,7 @@ The Mass itself is a song; it is meant to be sung. At Mass, Christ sings to the 
 
 -- *Sacrosanctum Concilium*, No. 112. Vatican Council II`,
   date: "2025-04-15",
-  author: "Robert Odero",
+  author: "The CantaMuse",
   category: "monthly",
   pdfUrl: "/musings/05-apr-lingua-franca.pdf",
 };
