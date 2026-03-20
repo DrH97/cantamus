@@ -88,6 +88,7 @@ export function HeroAfrican() {
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="text-6xl font-bold tracking-tight md:text-8xl"
+              style={{ fontFamily: '"Bete Noir", serif' }}
             >
               <span className="text-gradient-gold">Cantamus</span>
             </motion.h1>

@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Bete Noir";
+  src:
+    url("/fonts/BeteNoirNF.otf") format("opentype"),
+    url("/fonts/BeteNoirNF.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilgond";
+  src: url("/fonts/GILGOND_.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ========================================
    CANTAMUS THEME SYSTEM
    Classical African - Bold, Regal, Modern
