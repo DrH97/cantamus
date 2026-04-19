@@ -2,6 +2,8 @@ import { getThirdSundays, services } from "@/data/events";
 import { hasMassProgramForDate } from "@/lib/db/queries/mass-programs";
 import { EventsPageClient } from "./client";
 
+export const revalidate = 600;
+
 export default async function EventsPage() {
   const now = new Date();
   const upcomingDates = getThirdSundays(now.getFullYear(), 6);
