@@ -1,27 +1,54 @@
 import { getThirdSundays, services } from "@/data/events";
-import { hasMassProgramForDate } from "@/lib/db/queries/mass-programs";
+import { getMassProgramsFromDate } from "@/lib/db/queries/mass-programs";
 import { EventsPageClient } from "./client";
 
-export const revalidate = 600;
+export const revalidate = 3600;
+
+const GRACE_PERIOD_DAYS = 7;
+const DEFAULT_TITLE = "Young Professionals' Mass";
 
 export default async function EventsPage() {
   const now = new Date();
-  const upcomingDates = getThirdSundays(now.getFullYear(), 6);
+  const cutoff = new Date(now);
+  cutoff.setDate(cutoff.getDate() - GRACE_PERIOD_DAYS);
+  const cutoffSlug = toDateSlug(cutoff);
 
-  // Check which dates have mass programs
-  const dateHasProgram = new Map<string, boolean>();
-  for (const date of upcomingDates) {
-    const slug = toDateSlug(date);
-    dateHasProgram.set(slug, await hasMassProgramForDate(slug));
+  const formulaDates = getThirdSundays(now.getFullYear(), 7).filter(
+    (d) => toDateSlug(d) >= cutoffSlug,
+  );
+  const dbPrograms = await getMassProgramsFromDate(cutoffSlug);
+
+  const eventMap = new Map<
+    string,
+    { slug: string; title: string; hasProgram: boolean }
+  >();
+
+  for (const d of formulaDates) {
+    const slug = toDateSlug(d);
+    eventMap.set(slug, { slug, title: DEFAULT_TITLE, hasProgram: false });
+  }
+  for (const p of dbPrograms) {
+    const existing = eventMap.get(p.date);
+    if (existing) {
+      eventMap.set(p.date, {
+        slug: p.date,
+        title: p.title ?? existing.title,
+        hasProgram: true,
+      });
+    } else {
+      eventMap.set(p.date, {
+        slug: p.date,
+        title: p.title ?? DEFAULT_TITLE,
+        hasProgram: true,
+      });
+    }
   }
 
-  return (
-    <EventsPageClient
-      upcomingDates={upcomingDates.map((d) => d.toISOString())}
-      dateHasProgram={Object.fromEntries(dateHasProgram)}
-      services={services}
-    />
+  const events = [...eventMap.values()].sort((a, b) =>
+    a.slug.localeCompare(b.slug),
   );
+
+  return <EventsPageClient events={events} services={services} />;
 }
 
 function toDateSlug(date: Date): string {

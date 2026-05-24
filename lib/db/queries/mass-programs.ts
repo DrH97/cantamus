@@ -129,6 +129,13 @@ export async function getUpcomingPrograms(limit = 5) {
   });
 }
 
+export async function getMassProgramsFromDate(date: string) {
+  return db.query.massPrograms.findMany({
+    where: sql`${massPrograms.date} >= ${date}`,
+    orderBy: massPrograms.date,
+  });
+}
+
 export async function getRecentPrograms(limit = 5) {
   const today = new Date().toISOString().split("T")[0];
   return db.query.massPrograms.findMany({

@@ -24,24 +24,18 @@ function formatDate(date: Date): string {
   });
 }
 
-function toDateSlug(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+function dateFromSlug(slug: string): Date {
+  const [y, m, d] = slug.split("-").map(Number);
+  return new Date(y, m - 1, d);
 }
 
 export function EventsPageClient({
-  upcomingDates,
-  dateHasProgram,
+  events,
   services,
 }: {
-  upcomingDates: string[];
-  dateHasProgram: Record<string, boolean>;
+  events: { slug: string; title: string; hasProgram: boolean }[];
   services: Service[];
 }) {
-  const dates = upcomingDates.map((iso) => new Date(iso));
-
   return (
     <>
       {/* Hero Section */}
@@ -85,49 +79,52 @@ export function EventsPageClient({
           subtitle="Young Professionals' Mass — every 3rd Sunday of the month"
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {dates.map((date, index) => (
-            <motion.div
-              key={date.toISOString()}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-            >
-              <Card className="h-full hover:shadow-md transition-shadow">
-                <CardContent>
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 flex h-12 w-12 items-center justify-center bg-primary/10 border border-primary/20">
-                      <Calendar className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="font-medium text-text">
-                        {formatDate(date)}
-                      </h4>
-                      <p className="text-sm text-text-muted mt-1">
-                        Young Professionals&apos; Mass
-                      </p>
-                      <div className="flex items-center gap-1 mt-2 text-xs text-text-muted">
-                        <MapPin className="h-3 w-3" />
-                        <span>{siteConfig.location.venue}</span>
+          {events.map((event, index) => {
+            const date = dateFromSlug(event.slug);
+            return (
+              <motion.div
+                key={event.slug}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <Card className="h-full hover:shadow-md transition-shadow">
+                  <CardContent>
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 flex h-12 w-12 items-center justify-center bg-primary/10 border border-primary/20">
+                        <Calendar className="h-6 w-6 text-primary" />
                       </div>
-                      <div className="flex items-center gap-1 mt-1 text-xs text-text-muted">
-                        <Clock className="h-3 w-3" />
-                        <span>5:00 PM</span>
+                      <div className="min-w-0">
+                        <h4 className="font-medium text-text">
+                          {formatDate(date)}
+                        </h4>
+                        <p className="text-sm text-text-muted mt-1">
+                          {event.title}
+                        </p>
+                        <div className="flex items-center gap-1 mt-2 text-xs text-text-muted">
+                          <MapPin className="h-3 w-3" />
+                          <span>{siteConfig.location.venue}</span>
+                        </div>
+                        <div className="flex items-center gap-1 mt-1 text-xs text-text-muted">
+                          <Clock className="h-3 w-3" />
+                          <span>5:00 PM</span>
+                        </div>
+                        {event.hasProgram && (
+                          <Link href={`/events/${event.slug}`}>
+                            <Button className="mt-3 uppercase tracking-wider text-xs">
+                              <Music className="h-3 w-3 mr-1" />
+                              View Program
+                            </Button>
+                          </Link>
+                        )}
                       </div>
-                      {dateHasProgram[toDateSlug(date)] && (
-                        <Link href={`/events/${toDateSlug(date)}`}>
-                          <Button className="mt-3 uppercase tracking-wider text-xs">
-                            <Music className="h-3 w-3 mr-1" />
-                            View Program
-                          </Button>
-                        </Link>
-                      )}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
       </Section>
 
