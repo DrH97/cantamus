@@ -4,7 +4,7 @@ import { navItems, siteConfig } from "@/data/site-config";
 
 export function Footer() {
   return (
-    <footer className="bg-obsidian border-t border-border relative pt-4 pb-20">
+    <footer className="bg-obsidian border-t border-border relative pt-4 pb-20 print:hidden">
       {/* Gold accent line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 

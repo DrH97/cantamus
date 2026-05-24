@@ -4,7 +4,7 @@ import { EventsPageClient } from "./client";
 
 export const revalidate = 3600;
 
-const GRACE_PERIOD_DAYS = 7;
+const GRACE_PERIOD_DAYS = 21;
 const DEFAULT_TITLE = "Young Professionals' Mass";
 
 export default async function EventsPage() {

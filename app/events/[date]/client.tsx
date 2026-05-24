@@ -8,6 +8,7 @@ import {
   FileText,
   MapPin,
   Music,
+  Printer,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -134,7 +135,7 @@ export function MassProgramClient({
     <>
       {/* Hero Section */}
       <Section size="md" className="relative overflow-hidden">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 print:hidden">
           <Image
             src="https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1920&q=80"
             alt=""
@@ -144,15 +145,15 @@ export function MassProgramClient({
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
         </div>
-        <div className="absolute inset-0 pattern-african opacity-30" />
+        <div className="absolute inset-0 pattern-african opacity-30 print:hidden" />
         <div className="relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center"
+            className="max-w-3xl mx-auto text-center print:opacity-100! print:transform-none!"
           >
-            <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-semibold tracking-wider uppercase text-primary mb-6 border border-primary/20">
+            <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-semibold tracking-wider uppercase text-primary mb-6 border border-primary/20 print:hidden">
               <Music className="h-4 w-4" />
               Mass Program
             </span>
@@ -169,6 +170,14 @@ export function MassProgramClient({
                 <span>{siteConfig.location.venue}</span>
               </div>
             </div>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="mt-4 inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-primary transition-colors print:hidden"
+            >
+              <Printer className="h-3.5 w-3.5" />
+              Print
+            </button>
           </motion.div>
         </div>
       </Section>
@@ -197,6 +206,7 @@ export function MassProgramClient({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
+                className="print:opacity-100! print:transform-none! print:break-inside-avoid"
               >
                 <Card>
                   <CardContent>
@@ -227,7 +237,7 @@ export function MassProgramClient({
                           </p>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
+                      <div className="flex items-center gap-2 flex-shrink-0 print:hidden">
                         {hasScore && (
                           <button
                             type="button"
@@ -270,7 +280,7 @@ export function MassProgramClient({
                     {/* Content area — cross-fade between lyrics and score */}
                     <div className="mt-4 relative">
                       <div
-                        className={`transition-opacity duration-300 ${
+                        className={`transition-opacity duration-300 print:opacity-100! print:static! print:pointer-events-auto! ${
                           scoreVisible
                             ? "opacity-0 pointer-events-none absolute inset-0"
                             : "opacity-100"
@@ -287,7 +297,7 @@ export function MassProgramClient({
                         ) : null}
                       </div>
                       <div
-                        className={`transition-opacity duration-300 ${
+                        className={`transition-opacity duration-300 print:hidden ${
                           scoreVisible
                             ? "opacity-100"
                             : "opacity-0 pointer-events-none absolute inset-0"
@@ -321,7 +331,7 @@ export function MassProgramClient({
         </div>
 
         {/* Back button */}
-        <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-border">
+        <div className="max-w-3xl mx-auto mt-12 pt-8 border-t border-border print:hidden">
           <Link href="/events">
             <Button variant="outline" className="uppercase tracking-wider">
               <ArrowLeft className="h-4 w-4 mr-2" />

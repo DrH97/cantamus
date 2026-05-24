@@ -1,3 +1,4 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: print overrides must beat utility-class and inline animation styles */
 @import "tailwindcss";
 
 /* ========================================
@@ -252,4 +253,31 @@ h6 {
 
 .animate-pulse-glow {
   animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@page {
+  margin: 1cm;
+}
+
+@media print {
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+  /* Force black text for readability on white paper */
+  .text-text,
+  .text-text-muted,
+  .text-primary,
+  .text-gradient-gold {
+    color: black !important;
+    background: none !important;
+    -webkit-text-fill-color: black !important;
+  }
 }

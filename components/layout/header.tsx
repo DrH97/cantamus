@@ -14,7 +14,7 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 h-header bg-obsidian/90 backdrop-blur-xl border-b border-border">
+      <header className="fixed top-0 left-0 right-0 z-50 h-header bg-obsidian/90 backdrop-blur-xl border-b border-border print:hidden">
         {/* Gold accent line */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
 
