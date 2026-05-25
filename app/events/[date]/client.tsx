@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Section } from "@/components/ui/section";
@@ -77,6 +77,18 @@ export function MassProgramClient({
   traditionLabels: Record<string, string>;
 }) {
   const [showScore, setShowScore] = useState<Record<string, boolean>>({});
+  const [scoreLoaded, setScoreLoaded] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const before = () => setShowScore({});
+    window.addEventListener("beforeprint", before);
+    return () => window.removeEventListener("beforeprint", before);
+  }, []);
+
+  function handlePrint() {
+    setShowScore({});
+    setTimeout(() => window.print(), 0);
+  }
 
   function renderVerses(verses: Verse[]) {
     const languages = [...new Set(verses.map((v) => v.language))];
@@ -172,7 +184,7 @@ export function MassProgramClient({
             </div>
             <button
               type="button"
-              onClick={() => window.print()}
+              onClick={handlePrint}
               className="mt-4 inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-primary transition-colors print:hidden"
             >
               <Printer className="h-3.5 w-3.5" />
@@ -241,12 +253,16 @@ export function MassProgramClient({
                         {hasScore && (
                           <button
                             type="button"
-                            onClick={() =>
+                            onClick={() => {
                               setShowScore((prev) => ({
                                 ...prev,
                                 [entry.id]: !prev[entry.id],
-                              }))
-                            }
+                              }));
+                              setScoreLoaded((prev) => ({
+                                ...prev,
+                                [entry.id]: true,
+                              }));
+                            }}
                             className={`p-1.5 rounded transition-colors ${
                               scoreVisible
                                 ? "text-primary bg-primary/10"
@@ -303,24 +319,26 @@ export function MassProgramClient({
                             : "opacity-0 pointer-events-none absolute inset-0"
                         }`}
                       >
-                        {hasScore && entry.hymnScoreUrl && (
-                          <div className="rounded overflow-hidden border border-border">
-                            {isImage ? (
-                              // biome-ignore lint/performance/noImgElement: dynamic user upload, dimensions unknown
-                              <img
-                                src={entry.hymnScoreUrl}
-                                alt={`Score: ${entry.hymnTitle}`}
-                                className="w-full h-auto"
-                              />
-                            ) : (
-                              <iframe
-                                src={entry.hymnScoreUrl}
-                                className="w-full h-[500px]"
-                                title={`Score: ${entry.hymnTitle}`}
-                              />
-                            )}
-                          </div>
-                        )}
+                        {hasScore &&
+                          entry.hymnScoreUrl &&
+                          scoreLoaded[entry.id] && (
+                            <div className="rounded overflow-hidden border border-border">
+                              {isImage ? (
+                                // biome-ignore lint/performance/noImgElement: dynamic user upload, dimensions unknown
+                                <img
+                                  src={entry.hymnScoreUrl}
+                                  alt={`Score: ${entry.hymnTitle}`}
+                                  className="w-full h-auto"
+                                />
+                              ) : (
+                                <iframe
+                                  src={entry.hymnScoreUrl}
+                                  className="w-full h-[500px]"
+                                  title={`Score: ${entry.hymnTitle}`}
+                                />
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </CardContent>
