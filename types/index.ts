@@ -90,4 +90,6 @@ export interface Musing {
 export interface NavItem {
   label: string;
   href: string;
+  /** Renders the item as a highlighted call-out pill in the nav. */
+  highlight?: boolean;
 }
