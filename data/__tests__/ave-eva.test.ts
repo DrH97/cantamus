@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aveEva, formatEventDate } from "@/data/ave-eva";
+import { aveEva, formatEventDate, isAveEvaOver } from "@/data/ave-eva";
 
 describe("formatEventDate", () => {
   it("renders an ISO date in long en-GB form", () => {
@@ -27,5 +27,36 @@ describe("aveEva", () => {
     expect(
       aveEva.tickets.filter((t) => "featured" in t && t.featured),
     ).toHaveLength(1);
+  });
+});
+
+describe("isAveEvaOver", () => {
+  const [y, m, d] = aveEva.date.split("-").map(Number);
+
+  it("is not over well before the performance", () => {
+    expect(isAveEvaOver(new Date(y, m - 1, d - 30, 12))).toBe(false);
+  });
+
+  it("is not over the day before", () => {
+    expect(isAveEvaOver(new Date(y, m - 1, d - 1, 23, 59))).toBe(false);
+  });
+
+  it("is not over on the day itself, right up to the last minute", () => {
+    expect(isAveEvaOver(new Date(y, m - 1, d, 0, 0))).toBe(false);
+    expect(isAveEvaOver(new Date(y, m - 1, d, 23, 59))).toBe(false);
+  });
+
+  it("is over from the next local midnight", () => {
+    expect(isAveEvaOver(new Date(y, m - 1, d + 1, 0, 0))).toBe(true);
+  });
+
+  it("stays over long afterwards, including across a year boundary", () => {
+    expect(isAveEvaOver(new Date(y + 1, 0, 1, 12))).toBe(true);
+  });
+
+  it("compares calendar days, so a late-evening check does not flip early", () => {
+    // A timestamp comparison against midnight-UTC would call this over in a
+    // positive offset; a local calendar-day comparison does not.
+    expect(isAveEvaOver(new Date(y, m - 1, d, 22, 30))).toBe(false);
   });
 });

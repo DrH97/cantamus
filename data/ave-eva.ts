@@ -74,3 +74,21 @@ export function formatEventDate(dateStr: string): string {
     year: "numeric",
   });
 }
+
+/** Local calendar day as YYYY-MM-DD, comparable with the ISO event date. */
+function localDateKey(d: Date): string {
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${m}-${day}`;
+}
+
+/**
+ * True once the performance day is behind us. The day itself still counts as
+ * upcoming, so a callout stays put for anyone checking details on the way.
+ *
+ * Compares local calendar days rather than timestamps, so it flips at local
+ * midnight for the viewer and never drifts by a timezone.
+ */
+export function isAveEvaOver(now: Date = new Date()): boolean {
+  return localDateKey(now) > aveEva.date;
+}
