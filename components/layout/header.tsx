@@ -24,7 +24,7 @@ export function Header() {
             className="flex items-center gap-3 text-xl font-bold text-text transition-all duration-300 hover:text-primary"
           >
             <Music className="h-7 w-7 text-primary" />
-            <span className="tracking-wide">{siteConfig.name}</span>
+            <span className="font-accent tracking-wide">{siteConfig.name}</span>
           </Link>
 
           <nav className="hidden md:block">
@@ -40,11 +40,22 @@ export function Header() {
                       href={item.href}
                       className={cn(
                         "relative px-5 py-2 text-sm font-medium transition-all duration-300",
-                        isActive
-                          ? "text-primary"
-                          : "text-text-muted hover:text-text",
-                        "after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:bg-primary after:transition-all after:duration-300",
-                        isActive ? "after:w-[60%]" : "hover:after:w-[60%]",
+                        item.highlight
+                          ? cn(
+                              "ml-1 rounded-full border px-4 py-1.5 font-accent text-xs uppercase tracking-wider",
+                              isActive
+                                ? "border-primary bg-primary/15 text-primary"
+                                : "border-primary/40 text-primary hover:border-primary hover:bg-primary/10",
+                            )
+                          : cn(
+                              isActive
+                                ? "text-primary"
+                                : "text-text-muted hover:text-text",
+                              "after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:bg-primary after:transition-all after:duration-300",
+                              isActive
+                                ? "after:w-[60%]"
+                                : "hover:after:w-[60%]",
+                            ),
                       )}
                     >
                       {item.label}

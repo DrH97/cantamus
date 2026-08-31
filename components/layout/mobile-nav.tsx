@@ -63,7 +63,9 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                 onClick={onClose}
               >
                 <Music className="h-6 w-6 text-primary" />
-                <span className="tracking-wide">{siteConfig.name}</span>
+                <span className="font-accent tracking-wide">
+                  {siteConfig.name}
+                </span>
               </Link>
               <button
                 type="button"
@@ -88,11 +90,20 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                         href={item.href}
                         className={cn(
                           "block px-4 py-3 text-base font-medium transition-all duration-300 relative",
-                          isActive
-                            ? "text-primary bg-primary/10"
-                            : "text-text-muted hover:text-text hover:bg-surface",
-                          "after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:w-0 after:h-6 after:bg-primary after:transition-all after:duration-300",
-                          isActive && "after:w-0.5",
+                          item.highlight
+                            ? cn(
+                                "rounded-full border text-center font-accent text-sm uppercase tracking-wider",
+                                isActive
+                                  ? "border-primary bg-primary/15 text-primary"
+                                  : "border-primary/40 text-primary hover:bg-primary/10",
+                              )
+                            : cn(
+                                isActive
+                                  ? "text-primary bg-primary/10"
+                                  : "text-text-muted hover:text-text hover:bg-surface",
+                                "after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:w-0 after:h-6 after:bg-primary after:transition-all after:duration-300",
+                                isActive && "after:w-0.5",
+                              ),
                         )}
                         onClick={onClose}
                       >
