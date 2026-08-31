@@ -47,7 +47,7 @@ export function AveEvaClient() {
               <Ticket className="h-4 w-4" />
               {aveEva.billing}
             </span>
-            <h1 className="text-5xl font-bold tracking-tight md:text-6xl text-gradient-gold">
+            <h1 className="font-display text-5xl font-bold tracking-tight md:text-6xl text-gradient-gold">
               {aveEva.title}
             </h1>
             <p className="mt-4 font-accent text-lg uppercase tracking-[0.2em] text-primary">

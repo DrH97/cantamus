@@ -3,17 +3,20 @@
 Two local faces, declared in `app/globals.css`. Both are committed here as
 WOFF2 — the only format modern browsers need.
 
-| Family     | File                | CSS variable                      | Used for                                            |
-| ---------- | ------------------- | --------------------------------- | --------------------------------------------------- |
-| Gilgongo   | `gilgongo.woff2`    | `--font-display`, `--font-accent` | headings (`h1`–`h6`), eyebrow labels, buttons, wordmark |
-| Bête Noire | `bete-noire.woff2`  | —                                 | **currently unused** (see below)                    |
+| Family     | File                | CSS variable     | Used for                                              |
+| ---------- | ------------------- | ---------------- | ----------------------------------------------------- |
+| Bête Noire | `bete-noire.woff2`  | `--font-display` | large titles only, opt-in via the `font-display` class |
+| Gilgongo   | `gilgongo.woff2`    | `--font-accent`  | default for `h1`–`h6`, eyebrow labels, buttons, wordmark |
 
-Bête Noire held `--font-display` at first, but its inline outline detail is
-illegible at the sizes headings actually render at — `text-xl` and down, often
-faux-bolded, since the face has no real bold. Headings moved to Gilgongo. The
-face is still declared in `app/globals.css` and the file is still here, so it
-can be reinstated for large display type without re-converting; nothing
-references it, so browsers never download it.
+Bête Noire is **opt-in, not the heading default**. Its inline outline detail
+fills in and stops reading below roughly `text-3xl`, and the effect is worse
+under `font-semibold`, since neither face ships a real bold and the browser
+synthesises one. So it is applied by hand to the large showpiece titles — page
+`h1`s, the home hero, `SectionHeader` — while everything else inherits Gilgongo
+from the `h1`–`h6` rule in `app/globals.css`.
+
+When adding a big title, add `font-display` to its class list. Do not add it
+below `text-3xl`.
 
 Body copy still uses Geist (`--font-sans`), loaded by `next/font`.
 

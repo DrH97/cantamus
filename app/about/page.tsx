@@ -99,7 +99,7 @@ export default function AboutPage() {
               <BookOpen className="h-4 w-4" />
               Our Story
             </span>
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-gradient-gold">
+            <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-gradient-gold">
               About {siteConfig.name}
             </h1>
             <p className="mt-6 text-xl text-text-muted">
@@ -118,7 +118,9 @@ export default function AboutPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-bold md:text-4xl mb-6">Our Mission</h2>
+            <h2 className="font-display text-3xl font-bold md:text-4xl mb-6">
+              Our Mission
+            </h2>
             <p className="text-lg text-text-muted mb-4">
               <strong className="text-primary">{siteConfig.mission}</strong>
             </p>
@@ -319,7 +321,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold md:text-4xl mb-4">
+            <h2 className="font-display text-3xl font-bold md:text-4xl mb-4">
               Join Our Community
             </h2>
             <p className="text-lg text-text-muted max-w-2xl mx-auto mb-8">

@@ -44,7 +44,7 @@ export default function MusingsPage() {
               <BookOpen className="h-4 w-4" />
               Sacred Music Reflections
             </span>
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-gradient-gold">
+            <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-gradient-gold">
               Musings
             </h1>
             <p className="mt-6 text-xl text-text-muted">
