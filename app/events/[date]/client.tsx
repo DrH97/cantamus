@@ -7,12 +7,14 @@ import {
   ExternalLink,
   FileText,
   MapPin,
+  Maximize2,
+  Minimize2,
   Music,
   Printer,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Section } from "@/components/ui/section";
@@ -78,6 +80,8 @@ export function MassProgramClient({
 }) {
   const [showScore, setShowScore] = useState<Record<string, boolean>>({});
   const [scoreLoaded, setScoreLoaded] = useState<Record<string, boolean>>({});
+  const [fullscreenId, setFullscreenId] = useState<number | null>(null);
+  const scoreRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   useEffect(() => {
     const before = () => setShowScore({});
@@ -85,9 +89,50 @@ export function MassProgramClient({
     return () => window.removeEventListener("beforeprint", before);
   }, []);
 
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      const doc = document as Document & {
+        webkitFullscreenElement?: Element | null;
+      };
+      if (!(doc.fullscreenElement ?? doc.webkitFullscreenElement)) {
+        setFullscreenId(null);
+      }
+    };
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        onFullscreenChange,
+      );
+    };
+  }, []);
+
   function handlePrint() {
     setShowScore({});
     setTimeout(() => window.print(), 0);
+  }
+
+  function toggleFullscreen(id: number) {
+    const doc = document as Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => void;
+    };
+    if (doc.fullscreenElement ?? doc.webkitFullscreenElement) {
+      (doc.exitFullscreen ?? doc.webkitExitFullscreen)?.call(doc);
+      setFullscreenId(null);
+      return;
+    }
+    const el = scoreRefs.current[id] as
+      | (HTMLDivElement & { webkitRequestFullscreen?: () => Promise<void> })
+      | null
+      | undefined;
+    const request = el?.requestFullscreen ?? el?.webkitRequestFullscreen;
+    if (!el || !request) return;
+    Promise.resolve(request.call(el))
+      .then(() => setFullscreenId(id))
+      .catch(() => setFullscreenId(null));
   }
 
   function renderVerses(verses: Verse[]) {
@@ -165,7 +210,7 @@ export function MassProgramClient({
             transition={{ duration: 0.6 }}
             className="max-w-3xl mx-auto text-center print:opacity-100! print:transform-none!"
           >
-            <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-semibold tracking-wider uppercase text-primary mb-6 border border-primary/20 print:hidden">
+            <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-semibold tracking-wider uppercase font-accent text-primary mb-6 border border-primary/20 print:hidden">
               <Music className="h-4 w-4" />
               Mass Program
             </span>
@@ -206,6 +251,7 @@ export function MassProgramClient({
               : null;
 
             const scoreVisible = !!showScore[entry.id];
+            const isFullscreen = fullscreenId === entry.id;
             const hasScore = !!entry.hymnScoreUrl;
             const isImage = entry.hymnScoreUrl
               ? /\.(png|jpe?g|webp)/i.test(entry.hymnScoreUrl)
@@ -223,7 +269,7 @@ export function MassProgramClient({
                 <Card>
                   <CardContent>
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="inline-flex items-center bg-primary/10 px-3 py-1 text-xs font-semibold tracking-wider uppercase text-primary border border-primary/20">
+                      <span className="inline-flex items-center bg-primary/10 px-3 py-1 text-xs font-semibold tracking-wider uppercase font-accent text-primary border border-primary/20">
                         {sectionLabel}
                       </span>
                       {tradLabel && (
@@ -279,6 +325,17 @@ export function MassProgramClient({
                             )}
                           </button>
                         )}
+                        {hasScore && scoreVisible && (
+                          <button
+                            type="button"
+                            onClick={() => toggleFullscreen(entry.id)}
+                            className="p-1.5 rounded text-text-muted hover:text-primary transition-colors"
+                            title="Fullscreen sheet music"
+                            aria-label="Fullscreen sheet music"
+                          >
+                            <Maximize2 className="h-4 w-4" />
+                          </button>
+                        )}
                         {entry.hymnLink && (
                           <a
                             href={entry.hymnLink}
@@ -322,20 +379,44 @@ export function MassProgramClient({
                         {hasScore &&
                           entry.hymnScoreUrl &&
                           scoreLoaded[entry.id] && (
-                            <div className="rounded overflow-hidden border border-border">
+                            <div
+                              ref={(node) => {
+                                scoreRefs.current[entry.id] = node;
+                              }}
+                              className={
+                                isFullscreen
+                                  ? "relative flex items-center justify-center overflow-auto bg-background"
+                                  : "relative rounded overflow-hidden border border-border"
+                              }
+                            >
                               {isImage ? (
                                 // biome-ignore lint/performance/noImgElement: dynamic user upload, dimensions unknown
                                 <img
                                   src={entry.hymnScoreUrl}
                                   alt={`Score: ${entry.hymnTitle}`}
-                                  className="w-full h-auto"
+                                  className={
+                                    isFullscreen
+                                      ? "max-h-screen max-w-full w-auto object-contain"
+                                      : "w-full h-auto"
+                                  }
                                 />
                               ) : (
                                 <iframe
                                   src={entry.hymnScoreUrl}
-                                  className="w-full h-[500px]"
+                                  className={`w-full ${isFullscreen ? "h-screen" : "h-[500px]"}`}
                                   title={`Score: ${entry.hymnTitle}`}
                                 />
+                              )}
+                              {isFullscreen && (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleFullscreen(entry.id)}
+                                  className="absolute top-3 right-3 z-10 rounded-full bg-obsidian/80 p-2 text-text-muted backdrop-blur transition-colors hover:text-primary"
+                                  title="Exit fullscreen"
+                                  aria-label="Exit fullscreen"
+                                >
+                                  <Minimize2 className="h-4 w-4" />
+                                </button>
                               )}
                             </div>
                           )}
