@@ -3,10 +3,17 @@
 Two local faces, declared in `app/globals.css`. Both are committed here as
 WOFF2 — the only format modern browsers need.
 
-| Family     | File                | CSS variable     | Used for                              |
-| ---------- | ------------------- | ---------------- | ------------------------------------- |
-| Bête Noire | `bete-noire.woff2`  | `--font-display` | all headings (`h1`–`h6`)              |
-| Gilgongo   | `gilgongo.woff2`    | `--font-accent`  | eyebrow labels, buttons, the wordmark |
+| Family     | File                | CSS variable                      | Used for                                            |
+| ---------- | ------------------- | --------------------------------- | --------------------------------------------------- |
+| Gilgongo   | `gilgongo.woff2`    | `--font-display`, `--font-accent` | headings (`h1`–`h6`), eyebrow labels, buttons, wordmark |
+| Bête Noire | `bete-noire.woff2`  | —                                 | **currently unused** (see below)                    |
+
+Bête Noire held `--font-display` at first, but its inline outline detail is
+illegible at the sizes headings actually render at — `text-xl` and down, often
+faux-bolded, since the face has no real bold. Headings moved to Gilgongo. The
+face is still declared in `app/globals.css` and the file is still here, so it
+can be reinstated for large display type without re-converting; nothing
+references it, so browsers never download it.
 
 Body copy still uses Geist (`--font-sans`), loaded by `next/font`.
 
