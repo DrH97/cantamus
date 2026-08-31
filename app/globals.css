@@ -124,16 +124,21 @@ body {
    TYPOGRAPHY
    ======================================== */
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  /* Gilgongo by default; large titles opt into Bete Noire with `font-display`. */
-  font-family: var(--font-accent);
-  line-height: 1.2;
-  font-weight: 400;
+/* In @layer base so utilities can override it. Unlayered rules beat every
+   layered one whatever the specificity, so an unlayered h1-h6 font-family
+   silently outranks `font-display` / `font-accent` on a heading. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    /* Gilgongo by default; large titles opt into Bete Noire with `font-display`. */
+    font-family: var(--font-accent);
+    line-height: 1.2;
+    font-weight: 400;
+  }
 }
 
 /* ========================================
