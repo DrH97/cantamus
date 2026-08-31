@@ -62,7 +62,7 @@ export function MusicPageClient({
               <Music className="h-4 w-4" />
               Our Repertoire
             </span>
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-gradient-gold">
+            <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-gradient-gold">
               Sacred Music
             </h1>
             <p className="mt-6 text-xl text-text-muted">
@@ -189,7 +189,7 @@ export function MusicPageClient({
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold md:text-4xl mb-4">
+            <h2 className="font-display text-3xl font-bold md:text-4xl mb-4">
               Experience Live
             </h2>
             <p className="text-lg text-text-muted max-w-2xl mx-auto mb-8">

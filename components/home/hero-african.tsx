@@ -87,7 +87,7 @@ export function HeroAfrican() {
                 delay: 0.15,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="text-6xl font-bold tracking-tight md:text-8xl"
+              className="font-display text-6xl font-bold tracking-tight md:text-8xl"
             >
               <span className="text-gradient-gold">Cantamus</span>
             </motion.h1>

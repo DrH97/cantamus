@@ -143,7 +143,7 @@ export default function MusingPage({
               <BookOpen className="h-4 w-4" />
               {categoryLabels[musing.category]}
             </span>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl text-gradient-gold">
+            <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl text-gradient-gold">
               {musing.title}
             </h1>
             <div className="mt-6 flex items-center justify-center gap-6 text-sm text-text-muted">

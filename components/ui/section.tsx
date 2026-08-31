@@ -58,7 +58,7 @@ export function SectionHeader({
       className={cn("mb-10 md:mb-14", centered && "text-center", className)}
       {...props}
     >
-      <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+      <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
         {title}
       </h2>
       {subtitle && (

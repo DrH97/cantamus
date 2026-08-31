@@ -183,7 +183,7 @@ export default function HomePage() {
             className="relative z-10"
           >
             <Calendar className="h-16 w-16 text-primary mb-6 mx-auto drop-shadow-[0_0_20px_var(--gold-glow)]" />
-            <h2 className="text-4xl font-bold md:text-5xl mb-6">
+            <h2 className="font-display text-4xl font-bold md:text-5xl mb-6">
               Join Us at Mass
             </h2>
             <p className="text-xl text-text-muted max-w-2xl mb-2">
