@@ -138,7 +138,7 @@ export default function MusingPage({
             className="max-w-3xl mx-auto text-center"
           >
             <span
-              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold tracking-wider uppercase mb-6 border border-primary/20 ${categoryColors[musing.category]}`}
+              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold tracking-wider uppercase font-accent mb-6 border border-primary/20 ${categoryColors[musing.category]}`}
             >
               <BookOpen className="h-4 w-4" />
               {categoryLabels[musing.category]}

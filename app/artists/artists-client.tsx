@@ -59,7 +59,7 @@ export function ArtistsClient({
             transition={{ duration: 0.6 }}
             className="max-w-3xl mx-auto text-center"
           >
-            <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-semibold tracking-wider uppercase text-primary mb-6 border border-primary/20">
+            <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-semibold tracking-wider uppercase font-accent text-primary mb-6 border border-primary/20">
               <Users className="h-4 w-4" />
               Our Family
             </span>

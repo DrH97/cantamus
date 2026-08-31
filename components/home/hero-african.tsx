@@ -73,7 +73,7 @@ export function HeroAfrican() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="mb-8"
             >
-              <span className="inline-flex items-center gap-3 px-5 py-2.5 text-[0.8rem] font-semibold tracking-[0.1em] uppercase text-primary bg-primary/10 border border-primary/30">
+              <span className="inline-flex items-center gap-3 px-5 py-2.5 text-[0.8rem] font-semibold tracking-[0.1em] uppercase font-accent text-primary bg-primary/10 border border-primary/30">
                 <Music className="h-4 w-4" />
                 Catholic Chorale from Nairobi, Kenya
               </span>
