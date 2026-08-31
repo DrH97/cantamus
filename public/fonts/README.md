@@ -16,8 +16,10 @@ Body copy still uses Geist (`--font-sans`), loaded by `next/font`.
   from `BeteNoirNF.otf`. Licensed under the 1001Fonts *Free For Commercial Use*
   (FFC) terms, which name "websites for companies" as permitted commercial use.
   The EULA ships in the original download; keep a copy with the source files.
-- **Gilgongo** — the base "Gilgongo" face (`GILGON__.ttf`), a Ray Larabie
-  design. The download carries a designer's note rather than a formal EULA.
+- **Gilgongo Doro** — the Doro cut (`GILGOND_.ttf`), a Ray Larabie design.
+  The download carries a designer's note rather than a formal EULA. The file
+  and the CSS family stay named `gilgongo` so a different cut can be swapped
+  in without touching any code — see the note below.
 
 Both were converted TTF/OTF → WOFF2 with Google's `woff2` encoder (via the
 `wawoff2` npm package), which is a lossless repack of the same outlines.
@@ -25,7 +27,7 @@ Both were converted TTF/OTF → WOFF2 with Google's `woff2` encoder (via the
 ## Notes
 
 - The original download for Gilgongo contains **eight stylistic variants**, not
-  weights: Gilgongo (base, in use), Doro, Kaps, Mutombo, Ombre, Pap, Sledge and
+  weights: Gilgongo (base), Doro (in use), Kaps, Mutombo, Ombre, Pap, Sledge and
   Tiki. To switch, convert a different one to `gilgongo.woff2` — no code change.
 - Each family is declared `font-weight: 100 900`, so the single static face
   covers every weight and `font-bold` headings **synthesise** bold rather than
