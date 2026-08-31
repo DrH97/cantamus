@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Calendar, Heart, Music, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { AveEvaCallout } from "@/components/home/ave-eva-callout";
 import { HeroAfrican } from "@/components/home/hero-african";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardIcon } from "@/components/ui/card";
@@ -18,6 +19,8 @@ export default function HomePage() {
   return (
     <>
       <HeroAfrican />
+
+      <AveEvaCallout />
 
       <SectionDivider />
 
