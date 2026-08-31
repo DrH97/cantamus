@@ -24,7 +24,9 @@ export function Header() {
             className="flex items-center gap-3 text-xl font-bold text-text transition-all duration-300 hover:text-primary"
           >
             <Music className="h-7 w-7 text-primary" />
-            <span className="font-accent tracking-wide">{siteConfig.name}</span>
+            <span className="font-display tracking-wide">
+              {siteConfig.name}
+            </span>
           </Link>
 
           <nav className="hidden md:block">

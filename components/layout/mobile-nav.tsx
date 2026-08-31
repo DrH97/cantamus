@@ -63,7 +63,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                 onClick={onClose}
               >
                 <Music className="h-6 w-6 text-primary" />
-                <span className="font-accent tracking-wide">
+                <span className="font-display tracking-wide">
                   {siteConfig.name}
                 </span>
               </Link>

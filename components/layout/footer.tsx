@@ -16,7 +16,7 @@ export function Footer() {
               className="flex items-center gap-3 text-2xl font-bold text-text transition-colors duration-300 hover:text-primary"
             >
               <Music className="h-7 w-7 text-primary" />
-              <span className="font-accent tracking-wide">
+              <span className="font-display tracking-wide">
                 {siteConfig.name}
               </span>
             </Link>
