@@ -7,6 +7,8 @@
    Georgia stays on each stack as the fallback while the face loads.
    ======================================== */
 
+/* Currently unused: headings moved to Gilgongo for legibility. Kept declared
+   so it can be reinstated for large display type without re-converting. */
 @font-face {
   font-family: "Bete Noire";
   src: url("/fonts/bete-noire.woff2") format("woff2");
@@ -93,7 +95,9 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: Georgia, "Times New Roman", serif;
-  --font-display: "Bete Noire", Georgia, serif;
+  /* Gilgongo for headings too: Bete Noire's inline detail turns to mush at
+     the sizes headings actually render at, especially faux-bolded. */
+  --font-display: "Gilgongo", Georgia, serif;
   --font-accent: "Gilgongo", Georgia, serif;
 
   /* Header height */
