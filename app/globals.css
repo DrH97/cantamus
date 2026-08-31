@@ -2,6 +2,29 @@
 @import "tailwindcss";
 
 /* ========================================
+   LOCAL DISPLAY FACES
+   Files live in public/fonts/ (see public/fonts/README.md for provenance).
+   Georgia stays on each stack as the fallback while the face loads.
+   ======================================== */
+
+@font-face {
+  font-family: "Bete Noire";
+  src: url("/fonts/bete-noire.woff2") format("woff2");
+  /* single face covers every weight so `font-bold` headings don't fall back */
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilgongo";
+  src: url("/fonts/gilgongo.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ========================================
    CANTAMUS THEME SYSTEM
    Classical African - Bold, Regal, Modern
    ======================================== */
@@ -70,7 +93,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: Georgia, "Times New Roman", serif;
-  --font-display: Georgia, serif;
+  --font-display: "Bete Noire", Georgia, serif;
+  --font-accent: "Gilgongo", Georgia, serif;
 
   /* Header height */
   --spacing-header: var(--header-height);
@@ -104,7 +128,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: Georgia, serif;
+  font-family: var(--font-display);
   line-height: 1.2;
   font-weight: 400;
 }

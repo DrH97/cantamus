@@ -16,7 +16,9 @@ export function Footer() {
               className="flex items-center gap-3 text-2xl font-bold text-text transition-colors duration-300 hover:text-primary"
             >
               <Music className="h-7 w-7 text-primary" />
-              <span className="tracking-wide">{siteConfig.name}</span>
+              <span className="font-accent tracking-wide">
+                {siteConfig.name}
+              </span>
             </Link>
             <p className="mt-4 max-w-md text-text-muted leading-relaxed">
               Where ancient Gregorian chant meets the timeless elegance of
@@ -33,7 +35,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-5 text-sm font-semibold tracking-[0.1em] uppercase text-primary">
+            <h3 className="mb-5 text-sm font-semibold tracking-[0.1em] uppercase font-accent text-primary">
               Navigate
             </h3>
             <ul className="space-y-3">
@@ -51,7 +53,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-5 text-sm font-semibold tracking-[0.1em] uppercase text-primary">
+            <h3 className="mb-5 text-sm font-semibold tracking-[0.1em] uppercase font-accent text-primary">
               Location
             </h3>
             <ul className="space-y-4 text-sm text-text-muted">
