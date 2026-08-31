@@ -59,4 +59,9 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # /events is prerendered and queries the database at build time. A fresh
+      # checkout has no data/local.db, so libsql creates an empty one and the
+      # prerender fails on "no such table". Applying migrations gives the build
+      # a valid empty schema to read.
+      - run: pnpm db:migrate
       - run: pnpm build
