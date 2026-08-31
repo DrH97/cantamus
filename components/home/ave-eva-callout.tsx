@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, MapPin, Ticket } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/ui/section";
-import { aveEva, formatEventDate } from "@/data/ave-eva";
+import { aveEva, formatEventDate, isAveEvaOver } from "@/data/ave-eva";
 
 /**
  * Landing-page callout for the current production.
@@ -14,8 +15,22 @@ import { aveEva, formatEventDate } from "@/data/ave-eva";
  * The nav highlights Ave Eva with a pill, but that is behind the hamburger on
  * mobile, so the show would be invisible to a phone visitor until they opened
  * the menu. This puts it directly under the hero instead.
+ *
+ * It retires itself the day after the performance. The check runs in an effect
+ * rather than during render because this page is statically prerendered: a
+ * render-time check would be frozen at build time, and reading the clock during
+ * render would risk a hydration mismatch. The cost is that once the date has
+ * passed the callout paints for a frame before going, until the next deploy.
  */
 export function AveEvaCallout() {
+  const [isOver, setIsOver] = useState(false);
+
+  useEffect(() => {
+    setIsOver(isAveEvaOver());
+  }, []);
+
+  if (isOver) return null;
+
   return (
     <Section
       id="ave-eva"
