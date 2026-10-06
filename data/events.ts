@@ -1,8 +1,22 @@
+import { aveEva } from "@/data/ave-eva";
+
 export interface Service {
   id: string;
   title: string;
   description: string;
   link?: { href: string; label: string };
+}
+
+export interface PastEvent {
+  slug: string;
+  title: string;
+  strapline?: string;
+  description: string;
+  /** ISO date of the event */
+  date: string;
+  venue: string;
+  href: string;
+  poster?: { src: string; width: number; height: number };
 }
 
 export function getThirdSundays(year: number, monthCount: number): Date[] {
@@ -45,5 +59,19 @@ export const services: Service[] = [
     title: "Concerts",
     description:
       "Experience the beauty of sacred music in concert. We perform a rich programme spanning Gregorian chant, Classical polyphony, and African choral traditions.",
+  },
+];
+
+/** Productions that have already happened, newest first. */
+export const pastEvents: PastEvent[] = [
+  {
+    slug: "ave-eva",
+    title: aveEva.title,
+    strapline: aveEva.strapline,
+    description: aveEva.tagline,
+    date: aveEva.date,
+    venue: aveEva.venue,
+    href: "/ave-eva",
+    poster: aveEva.poster,
   },
 ];

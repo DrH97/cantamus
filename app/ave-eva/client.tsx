@@ -11,7 +11,6 @@ import {
   Users,
 } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { aveEva, formatEventDate } from "@/data/ave-eva";
@@ -71,28 +70,6 @@ export function AveEvaClient() {
                 <MapPin className="h-4 w-4 text-primary" />
                 {aveEva.venue}
               </span>
-            </div>
-
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-              <a
-                href={aveEva.ticketsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button size="lg" className="uppercase tracking-wider">
-                  <Ticket className="h-4 w-4" />
-                  Buy Tickets
-                </Button>
-              </a>
-              <a href="#tickets">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="uppercase tracking-wider"
-                >
-                  See Prices
-                </Button>
-              </a>
             </div>
           </motion.div>
 
@@ -185,57 +162,6 @@ export function AveEvaClient() {
             );
           })}
         </div>
-      </Section>
-
-      {/* Tickets */}
-      <Section id="tickets" variant="alternate" size="lg">
-        <SectionHeader title="Tickets" subtitle={aveEva.audience} />
-        <div className="grid gap-6 md:grid-cols-3 max-w-4xl mx-auto">
-          {aveEva.tickets.map((tier, index) => (
-            <motion.div
-              key={tier.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-            >
-              <Card
-                className={`h-full text-center ${
-                  tier.featured ? "border-primary" : ""
-                }`}
-              >
-                <CardContent>
-                  <p className="text-sm font-semibold tracking-wider uppercase font-accent text-primary">
-                    {tier.name}
-                  </p>
-                  <p className="mt-4 text-4xl font-bold text-text">
-                    <span className="text-lg align-top text-text-muted mr-1">
-                      {tier.currency}
-                    </span>
-                    {tier.price.toLocaleString("en-KE")}
-                  </p>
-                  <p className="mt-3 text-sm text-text-muted">{tier.note}</p>
-                  <a
-                    href={aveEva.ticketsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block mt-6"
-                  >
-                    <Button
-                      variant={tier.featured ? "primary" : "outline"}
-                      className="w-full uppercase tracking-wider"
-                    >
-                      Buy Now
-                    </Button>
-                  </a>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-        <p className="mt-8 text-center text-sm text-text-muted">
-          Tickets are sold through TikoHUB.
-        </p>
       </Section>
 
       {/* Practical details */}

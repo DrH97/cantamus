@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getThirdSundays, services } from "@/data/events";
+import { getThirdSundays, pastEvents, services } from "@/data/events";
 
 /** Third Sunday = the 15th at the earliest, the 21st at the latest. */
 function isThirdSunday(d: Date) {
@@ -62,5 +62,16 @@ describe("services", () => {
       expect(s.title).toBeTruthy();
       expect(s.description).toBeTruthy();
     }
+  });
+});
+
+describe("pastEvents", () => {
+  it("lists Ave Eva", () => {
+    expect(pastEvents.map((e) => e.slug)).toContain("ave-eva");
+  });
+
+  it("is ordered newest first", () => {
+    const dates = pastEvents.map((e) => e.date);
+    expect(dates).toEqual([...dates].sort().reverse());
   });
 });
