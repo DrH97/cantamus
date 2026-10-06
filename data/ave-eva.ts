@@ -1,11 +1,3 @@
-export interface TicketTier {
-  name: string;
-  price: number;
-  currency: string;
-  note: string;
-  featured?: boolean;
-}
-
 export const aveEva = {
   title: "Ave Eva",
   /** Strapline as it appears on the poster */
@@ -24,8 +16,6 @@ export const aveEva = {
   doorsOpen: "3:00 pm",
   venue: "Strathmore University Auditorium",
   city: "Strathmore, Nairobi",
-  audience: "Suitable for the whole family",
-  ticketsUrl: "https://www.tikohub.com/events/ave-eva",
   archetypes: [
     {
       name: "Virgin",
@@ -43,27 +33,6 @@ export const aveEva = {
         "Mary crowned — standing against the serpent on behalf of her children.",
     },
   ],
-  tickets: [
-    {
-      name: "Children",
-      price: 1000,
-      currency: "Ksh",
-      note: "For the little ones in the family",
-    },
-    {
-      name: "Standard",
-      price: 2000,
-      currency: "Ksh",
-      note: "General admission seating",
-      featured: true,
-    },
-    {
-      name: "VIP",
-      price: 5000,
-      currency: "Ksh",
-      note: "Premium seating closest to the stage",
-    },
-  ] satisfies TicketTier[],
 } as const;
 
 export function formatEventDate(dateStr: string): string {
@@ -73,22 +42,4 @@ export function formatEventDate(dateStr: string): string {
     month: "long",
     year: "numeric",
   });
-}
-
-/** Local calendar day as YYYY-MM-DD, comparable with the ISO event date. */
-function localDateKey(d: Date): string {
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${d.getFullYear()}-${m}-${day}`;
-}
-
-/**
- * True once the performance day is behind us. The day itself still counts as
- * upcoming, so a callout stays put for anyone checking details on the way.
- *
- * Compares local calendar days rather than timestamps, so it flips at local
- * midnight for the viewer and never drifts by a timezone.
- */
-export function isAveEvaOver(now: Date = new Date()): boolean {
-  return localDateKey(now) > aveEva.date;
 }
