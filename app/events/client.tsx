@@ -1,13 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Calendar, Clock, Heart, MapPin, Music } from "lucide-react";
+import {
+  ArrowRight,
+  Calendar,
+  Clock,
+  Heart,
+  MapPin,
+  Music,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Section, SectionHeader } from "@/components/ui/section";
-import type { Service } from "@/data/events";
+import type { PastEvent, Service } from "@/data/events";
 import { siteConfig } from "@/data/site-config";
 
 const serviceIcons: Record<string, typeof Calendar> = {
@@ -31,9 +38,11 @@ function dateFromSlug(slug: string): Date {
 
 export function EventsPageClient({
   events,
+  pastEvents,
   services,
 }: {
   events: { slug: string; title: string; hasProgram: boolean }[];
+  pastEvents: PastEvent[];
   services: Service[];
 }) {
   return (
@@ -177,6 +186,90 @@ export function EventsPageClient({
           })}
         </div>
       </Section>
+
+      {/* Past Events Section */}
+      {pastEvents.length > 0 && (
+        <Section size="lg">
+          <SectionHeader
+            title="Past Events"
+            subtitle="Productions we have staged"
+          />
+          <div className="mx-auto grid max-w-4xl gap-6">
+            {pastEvents.map((event, index) => (
+              <motion.div
+                key={event.slug}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="hover:shadow-md transition-shadow">
+                  <CardContent>
+                    <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-left">
+                      {event.poster && (
+                        <Link
+                          href={event.href}
+                          className="shrink-0"
+                          aria-hidden
+                          tabIndex={-1}
+                        >
+                          <Image
+                            src={event.poster.src}
+                            width={event.poster.width}
+                            height={event.poster.height}
+                            alt=""
+                            className="h-40 w-auto border border-primary/30"
+                            sizes="120px"
+                          />
+                        </Link>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-display text-2xl font-bold tracking-tight">
+                          <Link
+                            href={event.href}
+                            className="text-gradient-gold transition-opacity hover:opacity-80"
+                          >
+                            {event.title}
+                          </Link>
+                        </h3>
+                        {event.strapline && (
+                          <p className="mt-1 font-accent text-xs uppercase tracking-[0.2em] text-primary">
+                            {event.strapline}
+                          </p>
+                        )}
+                        <p className="mt-3 text-text-muted">
+                          {event.description}
+                        </p>
+                        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-text-muted sm:justify-start">
+                          <span className="flex items-center gap-1.5">
+                            <Calendar className="h-4 w-4 text-primary" />
+                            <time dateTime={event.date}>
+                              {formatDate(dateFromSlug(event.date))}
+                            </time>
+                          </span>
+                          <span className="flex items-center gap-1.5">
+                            <MapPin className="h-4 w-4 text-primary" />
+                            {event.venue}
+                          </span>
+                        </div>
+                        <Link href={event.href}>
+                          <Button
+                            variant="outline"
+                            className="mt-5 uppercase tracking-wider text-xs"
+                          >
+                            Learn More
+                            <ArrowRight className="h-3 w-3" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </Section>
+      )}
     </>
   );
 }

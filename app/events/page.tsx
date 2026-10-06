@@ -1,4 +1,4 @@
-import { getThirdSundays, services } from "@/data/events";
+import { getThirdSundays, pastEvents, services } from "@/data/events";
 import { getMassProgramsFromDate } from "@/lib/db/queries/mass-programs";
 import { EventsPageClient } from "./client";
 
@@ -48,7 +48,13 @@ export default async function EventsPage() {
     a.slug.localeCompare(b.slug),
   );
 
-  return <EventsPageClient events={events} services={services} />;
+  return (
+    <EventsPageClient
+      events={events}
+      pastEvents={pastEvents}
+      services={services}
+    />
+  );
 }
 
 function toDateSlug(date: Date): string {

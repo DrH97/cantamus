@@ -32,7 +32,6 @@ export const siteConfig: SiteConfig = {
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "Ave Eva", href: "/ave-eva", highlight: true },
   { label: "Music", href: "/music" },
   { label: "Artists", href: "/artists" },
   { label: "Musings", href: "/musings" },
