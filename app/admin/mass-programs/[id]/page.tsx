@@ -37,39 +37,10 @@ interface SearchHymn {
   composer: string | null;
 }
 
-const MASS_SECTIONS = [
-  "prelude",
-  "introit",
-  "kyrie",
-  "gloria",
-  "responsorial",
-  "alleluia",
-  "offertory",
-  "sanctus",
-  "mysterium-fidei",
-  "amen",
-  "agnus-dei",
-  "communion",
-  "recessional",
-  "reprise",
-];
-
-const SECTION_LABELS: Record<string, string> = {
-  prelude: "Prelude",
-  introit: "Introit",
-  kyrie: "Kyrie",
-  gloria: "Gloria",
-  responsorial: "Responsorial Psalm",
-  alleluia: "Alleluia",
-  offertory: "Offertory",
-  sanctus: "Sanctus",
-  "mysterium-fidei": "Mysterium Fidei",
-  amen: "Amen",
-  "agnus-dei": "Agnus Dei",
-  communion: "Communion",
-  recessional: "Recessional",
-  reprise: "Reprise",
-};
+interface MassSection {
+  slug: string;
+  label: string;
+}
 
 export default function AdminMassProgramDetailPage({
   params,
@@ -79,6 +50,7 @@ export default function AdminMassProgramDetailPage({
   const { id } = use(params);
   const { toast } = useToast();
   const [program, setProgram] = useState<MassProgram | null>(null);
+  const [sections, setSections] = useState<MassSection[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Edit program metadata
@@ -104,6 +76,12 @@ export default function AdminMassProgramDetailPage({
   useEffect(() => {
     fetchProgram();
   }, [fetchProgram]);
+
+  useEffect(() => {
+    fetch("/api/admin/mass-sections")
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setSections);
+  }, []);
 
   async function searchHymns(q: string) {
     if (!q) {
@@ -133,6 +111,22 @@ export default function AdminMassProgramDetailPage({
       setSearchResults([]);
       fetchProgram();
       toast("Song added");
+    }
+  }
+
+  async function moveSong(songId: number, section: string) {
+    const sortOrder =
+      program?.songs.filter((s) => s.massSection === section).length ?? 0;
+    const res = await fetch(`/api/admin/mass-programs/${id}/songs`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ songId, massSection: section, sortOrder }),
+    });
+    if (res.ok) {
+      fetchProgram();
+      toast("Song moved");
+    } else {
+      toast("Failed to move song", "error");
     }
   }
 
@@ -183,6 +177,15 @@ export default function AdminMassProgramDetailPage({
 
   if (loading) return <p className="text-text-muted">Loading...</p>;
   if (!program) return <p className="text-text-muted">Program not found</p>;
+
+  // Keep songs visible even if their section has since been deleted.
+  const known = new Set(sections.map((s) => s.slug));
+  const displaySections = [
+    ...sections,
+    ...[...new Set(program.songs.map((s) => s.massSection))]
+      .filter((slug) => !known.has(slug))
+      .map((slug) => ({ slug, label: slug })),
+  ];
 
   return (
     <div>
@@ -263,7 +266,7 @@ export default function AdminMassProgramDetailPage({
 
       {/* Sections */}
       <div className="space-y-4">
-        {MASS_SECTIONS.map((section) => {
+        {displaySections.map(({ slug: section, label }) => {
           const sectionSongs = program.songs.filter(
             (s) => s.massSection === section,
           );
@@ -275,7 +278,7 @@ export default function AdminMassProgramDetailPage({
             >
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-semibold text-primary uppercase tracking-wider">
-                  {SECTION_LABELS[section] ?? section}
+                  {label}
                 </h3>
                 <button
                   type="button"
@@ -313,6 +316,19 @@ export default function AdminMassProgramDetailPage({
                       )}
                     </div>
                     <div className="flex items-center gap-1">
+                      <select
+                        value={song.massSection}
+                        onChange={(e) => moveSong(song.id, e.target.value)}
+                        className="mr-1 px-1.5 py-0.5 bg-background border border-border rounded text-xs text-text-muted focus:outline-none focus:ring-1 focus:ring-primary/50"
+                        title="Move to another section"
+                        aria-label="Section"
+                      >
+                        {displaySections.map((s) => (
+                          <option key={s.slug} value={s.slug}>
+                            {s.label}
+                          </option>
+                        ))}
+                      </select>
                       <button
                         type="button"
                         onClick={() => {

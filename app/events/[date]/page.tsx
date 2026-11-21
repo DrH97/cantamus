@@ -1,11 +1,8 @@
 import { notFound } from "next/navigation";
-import {
-  massSectionLabels,
-  massSectionOrder,
-  traditionLabels,
-} from "@/data/repertoire";
+import { traditionLabels } from "@/data/repertoire";
 import { resolveScoreUrl } from "@/lib/blob";
 import { getMassProgramWithSongs } from "@/lib/db/queries/mass-programs";
+import { getMassSections } from "@/lib/db/queries/mass-sections";
 import { MassProgramClient } from "./client";
 
 export default async function MassProgramPage({
@@ -14,7 +11,10 @@ export default async function MassProgramPage({
   params: Promise<{ date: string }>;
 }) {
   const { date } = await params;
-  const program = await getMassProgramWithSongs(date);
+  const [program, sections] = await Promise.all([
+    getMassProgramWithSongs(date),
+    getMassSections(),
+  ]);
 
   if (!program) {
     notFound();
@@ -28,8 +28,10 @@ export default async function MassProgramPage({
   return (
     <MassProgramClient
       program={{ ...program, songs: songsWithResolvedScores }}
-      massSectionLabels={massSectionLabels}
-      massSectionOrder={massSectionOrder}
+      massSectionLabels={Object.fromEntries(
+        sections.map((s) => [s.slug, s.label]),
+      )}
+      massSectionOrder={sections.map((s) => s.slug)}
       traditionLabels={traditionLabels}
     />
   );

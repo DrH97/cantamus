@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { siteConfig } from "@/data/site-config";
-import type { MassSection } from "@/types";
 
 interface Hymn {
   id: number;
@@ -27,13 +26,9 @@ const traditionColors: Record<string, string> = {
 
 export function MusicPageClient({
   hymns,
-  massSectionLabels: _msLabels,
-  massSectionOrder: _msOrder,
   traditionLabels,
 }: {
   hymns: Hymn[];
-  massSectionLabels: Record<MassSection, string>;
-  massSectionOrder: MassSection[];
   traditionLabels: Record<string, string>;
 }) {
   return (
