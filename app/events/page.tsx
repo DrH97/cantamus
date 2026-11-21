@@ -1,4 +1,9 @@
-import { getThirdSundays, pastEvents, services } from "@/data/events";
+import {
+  cancelledMasses,
+  getThirdSundays,
+  pastEvents,
+  services,
+} from "@/data/events";
 import { getMassProgramsFromDate } from "@/lib/db/queries/mass-programs";
 import { EventsPageClient } from "./client";
 
@@ -13,9 +18,10 @@ export default async function EventsPage() {
   cutoff.setDate(cutoff.getDate() - GRACE_PERIOD_DAYS);
   const cutoffSlug = toDateSlug(cutoff);
 
-  const formulaDates = getThirdSundays(now.getFullYear(), 7).filter(
-    (d) => toDateSlug(d) >= cutoffSlug,
-  );
+  const formulaDates = getThirdSundays(now.getFullYear(), 7).filter((d) => {
+    const slug = toDateSlug(d);
+    return slug >= cutoffSlug && !cancelledMasses.includes(slug);
+  });
   const dbPrograms = await getMassProgramsFromDate(cutoffSlug);
 
   const eventMap = new Map<
