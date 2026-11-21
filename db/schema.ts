@@ -81,6 +81,19 @@ export const massPrograms = sqliteTable("mass_programs", {
     .default(sql`(unixepoch())`),
 });
 
+/**
+ * The parts of the Mass a program's songs are filed under (Introit, Kyrie,
+ * ...). Admins add, rename and reorder these, so programs can carry parts
+ * the original list lacked, such as the Pater Noster.
+ * mass_program_songs.mass_section holds the slug.
+ */
+export const massSections = sqliteTable("mass_sections", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  label: text("label").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
 export const massProgramSongs = sqliteTable(
   "mass_program_songs",
   {

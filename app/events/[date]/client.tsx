@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Section } from "@/components/ui/section";
 import { siteConfig } from "@/data/site-config";
-import type { MassSection } from "@/types";
+import { sortBySection } from "@/lib/mass-sections";
 
 interface Verse {
   verseNumber: number;
@@ -74,8 +74,8 @@ export function MassProgramClient({
   traditionLabels,
 }: {
   program: MassProgram;
-  massSectionLabels: Record<MassSection, string>;
-  massSectionOrder: MassSection[];
+  massSectionLabels: Record<string, string>;
+  massSectionOrder: string[];
   traditionLabels: Record<string, string>;
 }) {
   const [showScore, setShowScore] = useState<Record<string, boolean>>({});
@@ -182,11 +182,7 @@ export function MassProgramClient({
     });
   }
 
-  const sortedSongs = [...program.songs].sort(
-    (a, b) =>
-      massSectionOrder.indexOf(a.massSection as MassSection) -
-      massSectionOrder.indexOf(b.massSection as MassSection),
-  );
+  const sortedSongs = sortBySection(program.songs, massSectionOrder);
 
   return (
     <>
@@ -244,8 +240,7 @@ export function MassProgramClient({
         <div className="max-w-3xl mx-auto space-y-6">
           {sortedSongs.map((entry, index) => {
             const sectionLabel =
-              massSectionLabels[entry.massSection as MassSection] ??
-              entry.massSection;
+              massSectionLabels[entry.massSection] ?? entry.massSection;
             const tradLabel = entry.hymnTradition
               ? (traditionLabels[entry.hymnTradition] ?? entry.hymnTradition)
               : null;

@@ -16,22 +16,6 @@ export interface TeamMember {
   isCORMember?: boolean;
 }
 
-export type MassSection =
-  | "prelude"
-  | "introit"
-  | "kyrie"
-  | "gloria"
-  | "responsorial"
-  | "alleluia"
-  | "offertory"
-  | "sanctus"
-  | "mysterium-fidei"
-  | "amen"
-  | "agnus-dei"
-  | "communion"
-  | "recessional"
-  | "reprise";
-
 export interface Song {
   id: string;
   title: string;
@@ -45,7 +29,8 @@ export interface Song {
 }
 
 export interface MassProgramSong {
-  massSection: MassSection;
+  /** Slug of a row in mass_sections; admins can add more. */
+  massSection: string;
   songId: string;
   lyrics?: string;
 }
