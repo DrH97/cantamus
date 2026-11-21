@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getThirdSundays, pastEvents, services } from "@/data/events";
+import {
+  cancelledMasses,
+  getThirdSundays,
+  pastEvents,
+  services,
+} from "@/data/events";
 
 /** Third Sunday = the 15th at the earliest, the 21st at the latest. */
 function isThirdSunday(d: Date) {
@@ -51,6 +56,19 @@ describe("getThirdSundays", () => {
   it("returns nothing for a zero-month window", () => {
     vi.setSystemTime(new Date(2026, 7, 31));
     expect(getThirdSundays(2026, 0)).toEqual([]);
+  });
+});
+
+describe("cancelledMasses", () => {
+  it("lists only third Sundays", () => {
+    for (const slug of cancelledMasses) {
+      const [y, m, d] = slug.split("-").map(Number);
+      expect(isThirdSunday(new Date(y, m - 1, d))).toBe(true);
+    }
+  });
+
+  it("cancels the December 2026 Mass", () => {
+    expect(cancelledMasses).toContain("2026-12-20");
   });
 });
 

@@ -19,6 +19,13 @@ export interface PastEvent {
   poster?: { src: string; width: number; height: number };
 }
 
+/**
+ * Third Sundays with no Young Professionals' Mass, as YYYY-MM-DD. The events
+ * page drops these from the formula dates. A program saved for one of these
+ * dates still shows, so publishing a program overrides the cancellation.
+ */
+export const cancelledMasses: string[] = ["2026-12-20"];
+
 export function getThirdSundays(year: number, monthCount: number): Date[] {
   const dates: Date[] = [];
   const now = new Date();
